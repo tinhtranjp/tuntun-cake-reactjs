@@ -1,0 +1,27 @@
+.text-red {
+  color: #dc3545;
+}
+.text-blue {
+  color: #007bff;
+}
+.text-highlight {
+  background: #fff3cd;
+  padding: 2px 4px;
+}
+.alert-warning {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+.info-box {
+  background: #f8f9fa;
+}
+.success-box {
+  background: #d4edda;
+}
+.lead-text {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+.small-text {
+  font-size: 0.875rem;
+}
