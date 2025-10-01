@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react"
-import Typography from "@mui/material/Typography"
 import { useCategoryGetAll } from "@/service/category/queries"
-import DndTasks from "@/components/common/DnDTasks"
 import { Box, Button } from "@mui/material"
 import { useCategoryReorder } from "@/service/category/mutation"
 import { useNavigate } from "react-router"
 import HeaderForm from "@/components/common/HederForm"
+import DndTasks from "@/components/dnd/task/DndTasks"
 
 function ReoderCategory() {
   const [cates, setCates] = useState([])

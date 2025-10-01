@@ -7,7 +7,10 @@ function AddProduct() {
     console.log("ahahha")
   }
   return (
-    <Box>
+    <Box
+      maxWidth={1000}
+      mx="auto"
+    >
       <HeaderForm
         title={"Thêm công thức"}
         url={"/product-list"}

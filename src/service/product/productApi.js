@@ -1,6 +1,6 @@
 import { axiosClient } from "../axiosClient"
 
-export const cakesApi = {
+export const productApi = {
   add: (productRQ) =>
     axiosClient.post("/products", productRQ, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -8,6 +8,8 @@ export const cakesApi = {
   update: (prdUpdateRQ, id) => axiosClient.put("/products/" + id, prdUpdateRQ).then((res) => res.data),
 
   getStatus: () => axiosClient.get("/products/status").then((res) => res.data),
+
+  getTypes: () => axiosClient.get("/products/types").then((res) => res.data),
 
   getById: (id) => axiosClient.get("/products/" + id).then((res) => res.data),
 
