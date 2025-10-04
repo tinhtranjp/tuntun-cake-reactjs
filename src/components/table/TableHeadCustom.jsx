@@ -1,8 +1,7 @@
 import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import TableSortLabel from "@mui/material/TableSortLabel"
-import { headCells } from "./headCells"
-import { StyledTableCell, WhiteBorderCheckbox } from "./styles"
+import { StyledTableCell, WhiteBorderCheckbox } from "@/components/table/styles"
 
 export default function TableHeadCustom({
   onSelectAllClick,
@@ -12,6 +11,7 @@ export default function TableHeadCustom({
   rowCount,
   onRequestSort,
   isShowDisplay,
+  headCells,
 }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property)

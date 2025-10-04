@@ -80,6 +80,14 @@ export default function SidebarTree() {
           itemId="product/add"
           label="Thêm sản phẩm"
         />
+        <TreeItem
+          itemId="product/purchase"
+          label="Xử lý hàng hóa"
+        />
+        <TreeItem
+          itemId="product/purchase/status"
+          label="Trạng thái đơn hàng"
+        />
       </TreeItem>
     </SimpleTreeView>
   )

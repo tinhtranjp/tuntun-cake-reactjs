@@ -3,8 +3,6 @@ import z from "zod"
 export const productVariantsSchema = z.object({
   variantName: z.string().min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
   flavor: z.string().min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
-  // price: z.number().min(0, { message: "Giá phải lớn hơn hoặc bằng 0" }),
-  // stockQuantity: z.number().min(0, { message: "Số lượng phải lớn hơn hoặc bằng 0" }),
   isDefault: z.boolean().optional(),
   images: z
     .any()
@@ -25,15 +23,30 @@ export const productSchema = z.object({
   description: z
     .string({ message: "Bạn hãy nhập thông tin vào đây" })
     .min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
-  // basePrice: z
-  //   .number({ message: "Bạn hãy nhập thông tin vào đây" })
-  //   .min(0, { message: "Giá phải lớn hơn hoặc bằng 0" }),
   status: z
     .string({ message: "Hãy chọn một trong những giá trị này" })
     .min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
   type: z
     .string({ message: "Hãy chọn một trong những giá trị này" })
     .min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
+  thumbnail: z
+    .instanceof(File, { message: "Vui lòng chọn file ảnh." })
+    .refine((file) => file.size > 0, {
+      message: "File không được rỗng",
+    })
+    .refine((file) => file.size <= 5 * 1024 * 1024, {
+      // 5MB
+      message: "File không được vượt quá 5MB",
+    })
+    .refine(
+      (file) => {
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+        return allowedTypes.includes(file.type)
+      },
+      {
+        message: "Chỉ chấp nhận file JPG, PNG, GIF",
+      },
+    ),
   categoryId: z.coerce
     .number({ message: "Hãy chọn một trong những giá trị này" })
     .min(0, { message: "Bạn chọn thông tin này" }),
@@ -48,7 +61,7 @@ export const productSchema = z.object({
 
       if (defaultVariants.length === 0) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Bạn phải chọn một variant làm mặc định",
           path: ["variants"],
         })
@@ -56,32 +69,20 @@ export const productSchema = z.object({
     }),
 })
 
-const productVariantsSchemaWithUrls = productVariantsSchema.extend({
-  images: z.array(z.string().url({ message: "Ảnh phải là URL hợp lệ" })),
-  sku: z.string().optional(),
-})
-
-export const productUpdateSchema = productSchema.extend({
-  variants: z
-    .array(productVariantsSchemaWithUrls)
-    .min(1, {
-      message: "Bạn phải thêm ít nhất 1 variant",
+export const schemaUpdate = productSchema.omit({ thumbnail: true }).extend({
+  thumbnail: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5 * 1024 * 1024, {
+      message: "File không được vượt quá 5MB",
     })
-    .superRefine((variants, ctx) => {
-      const defaultVariants = variants.filter((variant) => variant.isDefault === true)
-
-      if (defaultVariants.length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Bạn phải chọn một variant làm mặc định",
-          path: ["variants"],
-        })
-      } else if (defaultVariants.length > 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Chỉ được có đúng một variant được đặt làm mặc định",
-          path: ["variants"],
-        })
-      }
-    }),
+    .refine(
+      (file) => {
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+        return allowedTypes.includes(file.type)
+      },
+      {
+        message: "Chỉ chấp nhận file JPG, PNG, GIF",
+      },
+    )
+    .optional(),
 })

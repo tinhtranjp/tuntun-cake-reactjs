@@ -1,5 +1,7 @@
+import ProductEnhancedTable from "./table/ProductEnhancedTable"
+
 function Product() {
-  return <div>Product</div>
+  return <ProductEnhancedTable />
 }
 
 export default Product

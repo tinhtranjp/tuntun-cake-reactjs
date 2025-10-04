@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import DndImages from "./DndImages"
 import { Box } from "@mui/material"
+import isEqual from "lodash/isEqual"
 
-export default function ImageDnd({ onChange, isError, ...props }) {
-  const [items, setItems] = useState([])
+export default function ImageDnd({ onChange, isError, initialValue, ...props }) {
+  const [items, setItems] = useState(initialValue || [])
   const [start, setStart] = useState(false)
   const inputRef = useRef(null)
 
   useEffect(() => {
     if (onChange && start) {
       // const files = items.map((i) => i.file).filter((f) => !!f)
+      onChange(items)
+    } else if (onChange && !isEqual(items, initialValue)) {
       onChange(items)
     }
   }, [items])
@@ -33,14 +36,10 @@ export default function ImageDnd({ onChange, isError, ...props }) {
     }))
     setItems((prev) => [...prev, ...newItems])
 
-    console.log(items)
-
     setStart(true)
   }
 
   function removeItem(id) {
-    console.log(id)
-
     setItems((prev) => {
       const target = prev.find((i) => i.id === id)
       if (target?.preview) {

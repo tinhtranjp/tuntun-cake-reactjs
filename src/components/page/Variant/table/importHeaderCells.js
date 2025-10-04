@@ -1,0 +1,66 @@
+export const headCells = [
+  {
+    id: "id",
+    numeric: false,
+    disablePadding: true,
+    label: "ID",
+    sortable: true,
+  },
+  {
+    id: "sku",
+    numeric: false,
+    disablePadding: false,
+    label: "Mã sản phẩm",
+    sortable: false,
+  },
+  {
+    id: "thumbnail",
+    numeric: false,
+    disablePadding: false,
+    label: "Thumbnail",
+    sortable: false,
+  },
+  {
+    id: "name",
+    numeric: false,
+    disablePadding: false,
+    label: "Tên sản phẩm",
+    sortable: false,
+  },
+  {
+    id: "variantName",
+    numeric: false,
+    disablePadding: false,
+    label: "Size",
+    sortable: false,
+  },
+  {
+    id: "flavor",
+    numeric: false,
+    disablePadding: false,
+    label: "Vị",
+    sortable: false,
+  },
+  {
+    id: "stockQuantity",
+    numeric: false,
+    disablePadding: true,
+    label: "Số lượng",
+    sortable: true,
+  },
+  {
+    id: "price",
+    numeric: false,
+    disablePadding: true,
+    label: "Giá bán",
+    sortable: true,
+  },
+
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: true,
+    label: "Action",
+    sortable: false,
+  },
+]

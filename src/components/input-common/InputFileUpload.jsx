@@ -27,7 +27,7 @@ const PreviewImage = styled("img")({
   marginRight: 8,
 })
 
-export default function InputFileUpload({ name, control, imageUrl, multiple = false }) {
+export default function InputFileUpload({ label = "Upload files", name, control, imageUrl, multiple = false }) {
   const { field, fieldState } = useController({ name, control })
   const inputRef = React.useRef(null)
 
@@ -83,7 +83,7 @@ export default function InputFileUpload({ name, control, imageUrl, multiple = fa
         startIcon={<CloudUploadIcon />}
         sx={(theme) => ({ background: fieldState.error?.message ? theme.palette.error.main : "" })}
       >
-        Upload files
+        {label}
         <VisuallyHiddenInput
           ref={inputRef}
           type="file"

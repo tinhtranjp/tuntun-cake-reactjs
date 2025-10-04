@@ -25,3 +25,21 @@ export const useProductGetType = () => {
     placeholderData: keepPreviousData,
   })
 }
+
+export const useProductGetById = (id) => {
+  return useQuery({
+    queryKey: [ProductKey.GET_BY_ID, id],
+    queryFn: () => productApi.getById(id),
+    refetchOnWindowFocus: false,
+    enabled: !!id,
+  })
+}
+
+export const useProductSearch = (params) => {
+  return useQuery({
+    queryKey: [ProductKey.SEARCH, params],
+    queryFn: () => productApi.search(params),
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+  })
+}

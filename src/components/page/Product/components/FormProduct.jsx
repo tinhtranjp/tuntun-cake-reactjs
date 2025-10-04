@@ -10,6 +10,7 @@ import { useProductGetStatus, useProductGetType } from "@/service/product/querie
 import CkeditorCustom from "@/components/ckeditor/CkeditorCustom"
 import { useEffect } from "react"
 import { ProductVariantField } from "./ProductVariantField"
+import InputFileUpload from "@/components/input-common/InputFileUpload"
 
 function FormProduct({ onSubmit }) {
   const { data: categories } = useCategoryGetAll()
@@ -56,7 +57,7 @@ function FormProduct({ onSubmit }) {
   }, [errors?.variants?.message, fields.length])
 
   const onFormSubmit = async (data) => {
-    console.log(data)
+    await onSubmit?.(data)
   }
 
   return (
@@ -113,6 +114,14 @@ function FormProduct({ onSubmit }) {
             )}
           />
         </Grid>
+        <Grid size={12}>
+          <InputFileUpload
+            label="Ảnh nền"
+            control={control}
+            name="thumbnail"
+            multiple={false}
+          />
+        </Grid>
       </Grid>
 
       <Box>
@@ -144,6 +153,8 @@ function FormProduct({ onSubmit }) {
           type="submit"
           variant="contained"
           sx={{ my: 10 }}
+          loading={isSubmitting}
+          loadingIndicator="Loading…"
         >
           Submit
         </Button>

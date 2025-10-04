@@ -8,7 +8,7 @@ export default function SearchInput({ onChangeValue, width = "400px" }) {
     () =>
       debounce((value) => {
         onChangeValue(value)
-      }, 500),
+      }, 300),
     [],
   )
 

@@ -3,7 +3,12 @@ import { alpha } from "@mui/material/styles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import FilterListIcon from "@mui/icons-material/FilterList"
 
-export default function TableToolbarCustom({ numSelected, onDelete }) {
+export default function TableToolbarCustom({
+  numSelected,
+  onDelete,
+  title = "Danh sách công thức",
+  isShowAction = true,
+}) {
   return (
     <Toolbar
       sx={[
@@ -26,11 +31,11 @@ export default function TableToolbarCustom({ numSelected, onDelete }) {
           sx={{ flex: "1 1 100%" }}
           variant="h6"
         >
-          Danh sách công thức
+          {title}
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {isShowAction && numSelected > 0 ? (
         <Tooltip title="Xóa">
           <IconButton onClick={onDelete}>
             <DeleteIcon />

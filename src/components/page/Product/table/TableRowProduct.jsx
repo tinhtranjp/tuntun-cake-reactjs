@@ -1,12 +1,11 @@
-import { TableRow, TableCell, IconButton, Collapse, Box, Button, Checkbox, FormControlLabel } from "@mui/material"
+import { TableRow, TableCell, IconButton, Collapse, Box, Button, Checkbox } from "@mui/material"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import HtmlRender from "@/components/common/HtmlRender"
-import { IOSSwitch } from "@/assets/icon/IOSSwitch"
 import { useState } from "react"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 import TableImage from "@/components/table/TableImage"
-
-export default function TableRowRecipe({ row, isSelected, labelId, onClick, onToggleActive, showDisplay, navigate }) {
+export default function TableRowProduct({ row, isSelected, labelId, onClick, navigate, onOpenModal }) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -34,7 +33,10 @@ export default function TableRowRecipe({ row, isSelected, labelId, onClick, onTo
         >
           {row.id}
         </TableCell>
-        <TableCell>{row.title}</TableCell>
+        <TableCell sx={{ width: 150 }}>
+          <TableImage src={row.thumbnail} />
+        </TableCell>
+        <TableCell>{row.name}</TableCell>
         <TableCell
           onClick={(e) => {
             e.stopPropagation()
@@ -48,37 +50,42 @@ export default function TableRowRecipe({ row, isSelected, labelId, onClick, onTo
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>
-          <TableImage
-            src={row.imageUrl}
-            alt={row.title}
-          />
+        <TableCell
+          component="th"
+          id={labelId}
+          scope="row"
+          padding="none"
+        >
+          {row.basePrice}
         </TableCell>
-        {showDisplay === "true" && (
-          <TableCell padding="none">
-            <FormControlLabel
-              onClick={(e) => e.stopPropagation()}
-              onChange={() => onToggleActive(row.id)}
-              control={
-                <IOSSwitch
-                  sx={{ m: 1 }}
-                  checked={row.isDeleted}
-                />
-              }
-            />
-          </TableCell>
-        )}
-        <TableCell padding="none">
-          <Button
-            variant="contained"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation()
-              navigate(`/recipe/${row.id}/update`)
-            }}
-          >
-            Cập nhật
-          </Button>
+        <TableCell
+          padding="none"
+          sx={{ width: 200 }}
+        >
+          <Box>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpenModal?.(row.id)
+              }}
+              startIcon={<VisibilityIcon />}
+            >
+              View
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{ ml: 2 }}
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate(`/product/${row.id}/update`)
+              }}
+            >
+              Cập nhật
+            </Button>
+          </Box>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -92,7 +99,7 @@ export default function TableRowRecipe({ row, isSelected, labelId, onClick, onTo
             unmountOnExit
           >
             <Box sx={{ margin: "40px 4px" }}>
-              <HtmlRender htmlString={row.content} />
+              <HtmlRender htmlString={row.description} />
             </Box>
           </Collapse>
         </TableCell>

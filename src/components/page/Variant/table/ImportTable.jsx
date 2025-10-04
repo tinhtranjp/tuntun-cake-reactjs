@@ -1,40 +1,52 @@
-import * as React from "react"
-import { useNavigate, useSearchParams } from "react-router"
+import SearchInput from "@/components/input-common/SearchInput"
+import TableHeadCustom from "@/components/table/TableHeadCustom"
+import TableToolbarCustom from "@/components/table/TableToolbarCustom"
+
 import {
   Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
+  Stack,
   Table,
   TableBody,
   TableContainer,
   TablePagination,
-  Typography,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@mui/material"
-import SearchInput from "@/components/input-common/SearchInput"
-import { useRecipeSoftDeletes, useRecipeToggle } from "@/service/recipe/mutation"
-import { useRecipeSearch } from "@/service/recipe/queries"
-import TableRowRecipe from "./TableRowRecipe"
-import TableToolbarCustom from "@/components/table/TableToolbarCustom"
-import TableHeadCustom from "@/components/table/TableHeadCustom"
-import { headCells } from "./headCells"
+import * as React from "react"
+import { useNavigate, useSearchParams } from "react-router"
+import TextInput from "@/components/input-common/TextInput"
+import { useVariantSearch } from "@/service/variant/queries"
+import ImportRow from "./ImportRow"
+import { headCells } from "./importHeaderCells"
+import ImportView from "./ImportView"
 
-export default function RecipeEnhancedTable() {
+export default function ImportTable() {
   const [order, setOrder] = React.useState("asc")
   const [orderBy, setOrderBy] = React.useState("id")
   const [selected, setSelected] = React.useState([])
+  const [modal, setModal] = React.useState({
+    open: false,
+    row: null,
+    type: null,
+  })
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const title = searchParams.get("title") ?? ""
+  const name = searchParams.get("name") ?? ""
+  const sku = searchParams.get("sku") ?? ""
+  const flavor = searchParams.get("flavor") ?? ""
   const page = searchParams.get("page") ?? "0"
   const limit = searchParams.get("limit") ?? "5"
   const sort = searchParams.get("sort") ?? "id-desc"
-  const isDeleted = searchParams.get("isDeleted") ?? "false"
+  const type = searchParams.get("type") ?? ""
+  const minPrice = searchParams.get("minPrice") ?? ""
+  const maxPrice = searchParams.get("maxPrice") ?? ""
 
   const navigate = useNavigate()
 
+  // Params
   const updateParams = (newParams) => {
     setSearchParams(
       (prev) => {
@@ -54,16 +66,44 @@ export default function RecipeEnhancedTable() {
 
   const pageNumber = parseInt(page)
   const limitNumber = parseInt(limit)
-
-  const { data } = useRecipeSearch({ title, page: pageNumber, limit: limitNumber, sort, isDeleted })
+  const { data } = useVariantSearch({
+    name,
+    page: pageNumber,
+    limit: limitNumber,
+    sort,
+    type,
+    sku,
+    flavor,
+    minPrice,
+    maxPrice,
+  })
 
   const handleChangePage = (event, newPage) => updateParams({ page: newPage })
   const handleChangeRowsPerPage = (event) => updateParams({ page: 0, limit: parseInt(event.target.value, 10) })
-  const handleChangeTitle = (title) => updateParams({ title })
-  const handleChangeStatus = (event) => {
-    updateParams({ isDeleted: event.target.value })
+  const handleChangeName = (name) => updateParams({ name })
+  const handleChangeSku = (sku) => updateParams({ sku })
+
+  const handleChangeType = (e) => setOrRemoveParam("type", e.target.value)
+
+  const handleChangeMin = (value) => {
+    setOrRemoveParam("minPrice", value.toString())
+  }
+  const handleChangeMax = (value) => {
+    setOrRemoveParam("maxPrice", value.toString())
   }
 
+  const setOrRemoveParam = (key, value) => {
+    const newParams = Object.fromEntries(searchParams.entries())
+
+    if (value === null || value === "") {
+      delete newParams[key]
+    } else {
+      const newValue = Number(value)
+      newParams[key] = !!newValue ? newValue : value
+    }
+
+    setSearchParams(newParams, { replace: true })
+  }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc"
     const sortValue = isAsc ? "desc" : "asc"
@@ -71,6 +111,16 @@ export default function RecipeEnhancedTable() {
     setOrder(sortValue)
     setOrderBy(property)
     updateParams({ sort: `${property}-${sortValue}`, page: 0 })
+  }
+
+  // UI
+
+  const handleOpen = (row) => {
+    setModal({ open: true, row: row.id, type: row.type })
+  }
+
+  const handleClose = () => {
+    setModal({ open: false, row: null, type: null })
   }
 
   const handleSelectAllClick = (event) => {
@@ -102,62 +152,70 @@ export default function RecipeEnhancedTable() {
     setSelected(newSelected)
   }
 
-  const deletesMutation = useRecipeSoftDeletes()
-  const handleDeleteSelected = async () => {
-    try {
-      await deletesMutation.mutateAsync({ ids: selected })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const toggleMutation = useRecipeToggle()
-  const handleChangeActive = async (id) => {
-    try {
-      await toggleMutation.mutateAsync(id)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const selectedRow = React.useMemo(() => {
+    if (!data) return null
+    return data.content.find((i) => i.id === modal.row)
+  }, [data, modal.row])
 
   if (!data) return <div>loading...</div>
 
   return (
-    <>
-      <Typography
-        variant="h5"
-        sx={{ pt: 4, pb: 8 }}
-      >
-        Danh sách công thức
-      </Typography>
+    <Box sx={{ py: 4 }}>
       <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-        <SearchInput onChangeValue={handleChangeTitle} />
-        <FormControl
-          sx={{ width: 180 }}
-          size="small"
+        <SearchInput onChangeValue={handleChangeName} />
+
+        <Stack
+          alignItems="center"
+          flexDirection="row"
+          gap={2}
         >
-          <InputLabel id="demo-simple-select-label">Status</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={isDeleted}
-            label="Status"
-            onChange={handleChangeStatus}
+          <TextInput
+            onChangeValue={handleChangeSku}
+            label="Mã sản phẩm"
+            size="small"
+          />
+          <TextInput
+            onChangeValue={handleChangeMin}
+            type="number"
+            label="Giá thấp nhất"
+            size="small"
+          />
+          <TextInput
+            onChangeValue={handleChangeMax}
+            type="number"
+            label="Giá cao nhất"
+            size="small"
+          />
+          <FormControl
+            sx={{ width: 180 }}
+            size="small"
           >
-            <MenuItem value={true}>Tất cả</MenuItem>
-            <MenuItem value={false}>Loại bỏ đã xóa</MenuItem>
-          </Select>
-        </FormControl>
+            <InputLabel id="type">Type</InputLabel>
+            <Select
+              labelId="type"
+              id="demo-simple-type"
+              value={type}
+              label="Type"
+              onChange={handleChangeType}
+            >
+              <MenuItem value="">Tất cả</MenuItem>
+              <MenuItem value="IMPORTED">IMPORTED</MenuItem>
+              <MenuItem value="SELF_MADE">SELF_MADE</MenuItem>
+              <MenuItem value="RAW_MATERIAL">RAW_MATERIAL</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
       </Box>
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableToolbarCustom
             numSelected={selected.length}
-            onDelete={handleDeleteSelected}
+            title="Danh sách sản phẩm"
+            isShowAction={false}
           />
           <TableContainer>
             <Table
-              sx={{ minWidth: 750, tableLayout: isDeleted == "true" ? "fixed" : "layout" }}
+              sx={{ minWidth: 750, tableLayout: "layout" }}
               aria-labelledby="tableTitle"
               size={"medium"}
             >
@@ -168,7 +226,6 @@ export default function RecipeEnhancedTable() {
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={data.content.length}
-                isShowDisplay={isDeleted}
                 headCells={headCells}
               />
               <TableBody>
@@ -176,15 +233,13 @@ export default function RecipeEnhancedTable() {
                   const isItemSelected = selected.includes(row.id)
                   const labelId = `enhanced-table-checkbox-${index}`
                   return (
-                    <TableRowRecipe
+                    <ImportRow
                       isSelected={isItemSelected}
                       labelId={labelId}
-                      navigate={navigate}
                       onClick={(event) => handleClick(event, row.id)}
-                      onToggleActive={handleChangeActive}
                       row={row}
-                      showDisplay={isDeleted}
                       key={row.id}
+                      onOpenModal={handleOpen}
                     />
                   )
                 })}
@@ -203,6 +258,11 @@ export default function RecipeEnhancedTable() {
           />
         </Paper>
       </Box>
-    </>
+      <ImportView
+        modal={modal}
+        onClose={handleClose}
+        row={selectedRow}
+      />
+    </Box>
   )
 }

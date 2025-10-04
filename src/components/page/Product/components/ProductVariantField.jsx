@@ -6,13 +6,11 @@ import TextFieldCustom from "@/components/input-common/TextFieldCustom"
 import CheckBoxCustom from "@/components/input-common/CheckBoxCustom"
 import ImageDnd from "@/components/dnd/img/ImageDnd"
 
-export const ProductVariantField = ({ index, control, setValue, trigger, errors, remove }) => {
+export const ProductVariantField = ({ index, control, setValue, trigger, errors, remove, isUpdate }) => {
   const fieldErrors = errors.variants?.[index]
 
   const handleTrigger = (e) => {
     trigger("variants.variants")
-
-    console.log(control._formValues.variants)
 
     control._formValues.variants.forEach((v, i) => {
       if (i === index) {
@@ -22,6 +20,8 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
       }
     })
   }
+
+  const initialImgs = control._formValues.variants?.[index]?.images || []
 
   return (
     <Box>
@@ -41,6 +41,11 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
             name={`variants.${index}.variantName`}
             control={control}
             label="Size"
+            slotProps={{
+              input: {
+                readOnly: isUpdate ? true : false,
+              },
+            }}
           />
         </Grid>
         <Grid size={3}>
@@ -48,6 +53,11 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
             name={`variants.${index}.flavor`}
             control={control}
             label="Hương vị"
+            slotProps={{
+              input: {
+                readOnly: isUpdate ? true : false,
+              },
+            }}
           />
         </Grid>
       </Grid>
@@ -57,6 +67,7 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
             shouldValidate: true,
           })
         }}
+        initialValue={initialImgs}
         sx={{ my: 2 }}
         isError={!!fieldErrors?.images?.message}
       />

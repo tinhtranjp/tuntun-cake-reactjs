@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material"
 
-export default function RecipeImage({ src, alt }) {
+export default function TableImage({ src, alt }) {
   return src ? (
     <Box
       component="img"
@@ -19,6 +19,17 @@ export default function RecipeImage({ src, alt }) {
       }}
     />
   ) : (
-    <Typography>Chưa có ảnh nào</Typography>
+    <Box
+      component="img"
+      src="/no_image.jpeg"
+      alt={alt}
+      sx={{
+        width: 100,
+        height: 100,
+        borderRadius: 2,
+        objectFit: "cover",
+        boxShadow: 3,
+      }}
+    />
   )
 }

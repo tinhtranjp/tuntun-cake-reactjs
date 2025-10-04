@@ -9,8 +9,6 @@ function UpdateRecipe() {
   const mutation = useRepiceUpdate()
 
   const handleSubmit = async (id, data) => {
-    console.log(data)
-
     const formData = new FormData()
     const { categoryIds, content, title, file } = data
 

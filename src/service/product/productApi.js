@@ -5,7 +5,12 @@ export const productApi = {
     axiosClient.post("/products", productRQ, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
-  update: (prdUpdateRQ, id) => axiosClient.put("/products/" + id, prdUpdateRQ).then((res) => res.data),
+  update: (prdUpdateRQ, id) =>
+    axiosClient
+      .put("/products/" + id, prdUpdateRQ, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => res.data),
 
   getStatus: () => axiosClient.get("/products/status").then((res) => res.data),
 
@@ -13,7 +18,7 @@ export const productApi = {
 
   getById: (id) => axiosClient.get("/products/" + id).then((res) => res.data),
 
-  search: (searchParams) => axiosClient.get("/products/search", { searchParams }).then((res) => res.data),
+  search: (params) => axiosClient.get("/products/search", { params }).then((res) => res.data),
 
   upLoad: (files) =>
     axiosClient.post("/products/upload-img", files, {

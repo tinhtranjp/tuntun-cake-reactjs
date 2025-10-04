@@ -14,6 +14,8 @@ import {
   Product,
   AddProduct,
   UpdateProduct,
+  Import,
+  PurchaseList,
 } from "@components/page"
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -98,6 +100,14 @@ function App() {
                 element={<UpdateProduct />}
               />
 
+              <Route
+                path="/product/purchase"
+                element={<Import />}
+              />
+              <Route
+                path="/product/purchase/status"
+                element={<PurchaseList />}
+              />
               {/* ----------- product end ---------- */}
             </Route>
 
