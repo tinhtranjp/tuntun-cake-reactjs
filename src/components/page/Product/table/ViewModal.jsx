@@ -5,6 +5,9 @@ import { IOSSwitch } from "@/assets/icon/IOSSwitch"
 
 function ViewModal({ modal, onClose, row, onToggleVariant, variantDeleted }) {
   if (!row) return null
+
+  console.log(row)
+
   return (
     <Modal
       open={modal.open}
@@ -59,18 +62,6 @@ function ViewModal({ modal, onClose, row, onToggleVariant, variantDeleted }) {
                     >
                       {v.variantName}
                     </Typography>
-                  </Stack>
-                  <Stack
-                    flexDirection="row"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Hương vị : </Typography>
-                    <Chip
-                      label={v.flavor}
-                      color="success"
-                      size="small"
-                    />
                   </Stack>
                 </Stack>
                 <Typography>Giá tiền : {v.price}</Typography>

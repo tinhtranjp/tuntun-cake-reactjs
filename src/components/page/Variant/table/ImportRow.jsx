@@ -1,8 +1,11 @@
 import TableImage from "@/components/table/TableImage"
-import { Box, Button, Checkbox, Chip, TableCell, TableRow } from "@mui/material"
+import { Badge, Box, Button, Checkbox, Chip, Stack, TableCell, TableRow } from "@mui/material"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import { renderBackGroundPrice, renderBackGroundQuantity } from "@/helper/variant"
+import { useGetItemByTypeAndId } from "@/store/PurchaseStore"
 export default function ImportRow({ row, isSelected, labelId, onClick, onOpenModal }) {
+  const currentItem = useGetItemByTypeAndId("import", row.id)
+
   return (
     <>
       <TableRow
@@ -34,8 +37,47 @@ export default function ImportRow({ row, isSelected, labelId, onClick, onOpenMod
             color="primary"
           />
         </TableCell>
-        <TableCell sx={{ width: 150 }}>
-          <TableImage src={row.thumbnail} />
+        <TableCell sx={{ width: 100 }}>
+          {currentItem?.basePrice > 0 && (
+            <Stack
+              flexDirection="row"
+              justifyContent="center"
+              sx={{ mb: 2 }}
+            >
+              <Chip
+                label={`${currentItem?.basePrice?.toLocaleString("vi-VN")}  đ`}
+                color={"warning"}
+                size="small"
+              />
+            </Stack>
+          )}
+          {currentItem?.costPrice > 0 && (
+            <Stack
+              flexDirection="row"
+              justifyContent="center"
+              sx={{ mb: 2 }}
+            >
+              <Chip
+                label={`${currentItem?.costPrice?.toLocaleString("vi-VN")}  đ`}
+                color={"default"}
+                size="small"
+              />
+            </Stack>
+          )}
+
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Badge
+              badgeContent={currentItem && currentItem.quantity}
+              color="primary"
+              max={1000}
+            >
+              <TableImage
+                src={row.thumbnail}
+                width={50}
+                height={50}
+              />
+            </Badge>
+          </Box>
         </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell sx={{ width: 100 }}>{row.variantName}</TableCell>

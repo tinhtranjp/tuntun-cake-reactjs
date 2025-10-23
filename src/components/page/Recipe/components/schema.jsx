@@ -16,7 +16,7 @@ export const schemaCreate = z.object({
     })
     .refine(
       (file) => {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
         return allowedTypes.includes(file.type)
       },
       {
@@ -37,7 +37,7 @@ export const schemaUpdate = schemaCreate.omit({ file: true }).extend({
     })
     .refine(
       (file) => {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
         return allowedTypes.includes(file.type)
       },
       {

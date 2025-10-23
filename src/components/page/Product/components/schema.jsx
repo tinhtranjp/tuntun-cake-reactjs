@@ -2,18 +2,23 @@ import z from "zod"
 
 export const productVariantsSchema = z.object({
   variantName: z.string().min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
-  flavor: z.string().min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
   isDefault: z.boolean().optional(),
   images: z
-    .any()
-    .refine(
-      (file) => {
-        if (file instanceof File) return true
-        if (file instanceof FileList) return file.length > 0
-        if (Array.isArray(file)) return file.length > 0
-        return false
-      },
-      { message: "Bạn phải chọn file" },
+    .array(
+      z
+        .instanceof(File)
+        .refine((file) => file.size <= 5 * 1024 * 1024, {
+          message: "File không được vượt quá 5MB",
+        })
+        .refine(
+          (file) => {
+            const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+            return allowedTypes.includes(file.type)
+          },
+          {
+            message: "Chỉ chấp nhận file JPG, PNG, GIF",
+          },
+        ),
     )
     .optional(),
 })
@@ -29,27 +34,11 @@ export const productSchema = z.object({
   type: z
     .string({ message: "Hãy chọn một trong những giá trị này" })
     .min(1, { message: "Bạn hãy nhập thông tin vào đây" }),
-  thumbnail: z
-    .instanceof(File, { message: "Vui lòng chọn file ảnh." })
-    .refine((file) => file.size > 0, {
-      message: "File không được rỗng",
-    })
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      // 5MB
-      message: "File không được vượt quá 5MB",
-    })
-    .refine(
-      (file) => {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
-        return allowedTypes.includes(file.type)
-      },
-      {
-        message: "Chỉ chấp nhận file JPG, PNG, GIF",
-      },
-    ),
-  categoryId: z.coerce
-    .number({ message: "Hãy chọn một trong những giá trị này" })
-    .min(0, { message: "Bạn chọn thông tin này" }),
+  images: z.any(),
+  categoryIds: z
+    .array(z.number({ message: "Bạn hãy nhập thông tin vào đây" }))
+    .min(1, { message: "Phải chọn ít nhất 1 category" })
+    .max(10, { message: "Chỉ được chọn tối đa 10 categories" }),
   // Mảng productVariants
   variants: z
     .array(productVariantsSchema)
@@ -69,20 +58,6 @@ export const productSchema = z.object({
     }),
 })
 
-export const schemaUpdate = productSchema.omit({ thumbnail: true }).extend({
-  thumbnail: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "File không được vượt quá 5MB",
-    })
-    .refine(
-      (file) => {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
-        return allowedTypes.includes(file.type)
-      },
-      {
-        message: "Chỉ chấp nhận file JPG, PNG, GIF",
-      },
-    )
-    .optional(),
+export const schemaUpdate = productSchema.omit({ images: true }).extend({
+  images: z.any().optional(),
 })

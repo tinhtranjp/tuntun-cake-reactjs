@@ -5,15 +5,15 @@ import { mappedStringToObj } from "@/helper/product"
 import { useCategoryGetAll } from "@/service/category/queries"
 import { useProductGetById, useProductGetStatus, useProductGetType } from "@/service/product/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Box, Button, Grid } from "@mui/material"
+import { Box, Button, FormHelperText, Grid } from "@mui/material"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { useParams } from "react-router"
 import { ProductVariantField } from "./ProductVariantField"
 import { schemaUpdate } from "./schema"
 import { useEffect } from "react"
-import InputFileUpload from "@/components/input-common/InputFileUpload"
+import ImageDnd from "@/components/dnd/img/ImageDnd"
 
-function UpdateFormProduct({ onSubmit }) {
+function UpdateFormProduct({ onSubmit, type = "self_made" }) {
   const { id } = useParams()
   const { data: categories } = useCategoryGetAll()
   const { data: status } = useProductGetStatus()
@@ -43,17 +43,17 @@ function UpdateFormProduct({ onSubmit }) {
   })
 
   useEffect(() => {
-    if (data && categories && status && types) {
-      const { basePrice, category, description, name, status, type, variants } = data
+    if (data && status && types) {
+      const { basePrice, images, categories, description, name, status, type, variants } = data
       reset({
         name,
         description,
+        images,
         status: status?.toLocaleUpperCase(),
         type: type?.toLocaleUpperCase(),
         basePrice,
-        categoryId: category.id,
+        categoryIds: categories.map((c) => c.id) || [],
         variants: variants.map((variant) => ({
-          flavor: variant.flavor,
           variantName: variant.variantName,
           images: variant.images.map((img) => ({
             id: img.id,
@@ -64,13 +64,12 @@ function UpdateFormProduct({ onSubmit }) {
         })),
       })
     }
-  }, [data, categories, status, types])
+  }, [data, status, types])
 
   // Function để append variant
   const appendVariant = () => {
     append({
       variantName: "",
-      flavor: "",
       stockQuantity: 0,
       price: 0,
       images: [],
@@ -102,15 +101,17 @@ function UpdateFormProduct({ onSubmit }) {
             control={control}
           />
         </Grid>
-        <Grid size={4}>
-          <AutocompleteRHF
-            label="Thể loại"
-            name="categoryId"
-            multiple={false}
-            control={control}
-            options={categories?.map((c) => ({ value: c.id, label: c.name })) || []}
-          />
-        </Grid>
+        {categories && (
+          <Grid size={4}>
+            <AutocompleteRHF
+              control={control}
+              label="Thể loại"
+              name="categoryIds"
+              options={categories?.map((c) => ({ value: c.id, label: c.name }))}
+              multiple
+            />
+          </Grid>
+        )}
         <Grid size={4}>
           <AutocompleteRHF
             label="Trạng thái"
@@ -129,6 +130,22 @@ function UpdateFormProduct({ onSubmit }) {
             options={mappedStringToObj(types) ?? []}
           />
         </Grid>
+        {data && (
+          <Grid size={12}>
+            <ImageDnd
+              onChange={(files) => {
+                setValue(`images`, files, {
+                  shouldValidate: true,
+                })
+              }}
+              initialValue={data.images}
+              type="update"
+              sx={{ my: 2 }}
+              isError={!!errors?.images?.message}
+            />
+            {errors?.images && <FormHelperText error>{errors?.images?.message}</FormHelperText>}
+          </Grid>
+        )}
         <Grid size={12}>
           <Controller
             name="description"
@@ -144,21 +161,13 @@ function UpdateFormProduct({ onSubmit }) {
             )}
           />
         </Grid>
-        <Grid size={12}>
-          <InputFileUpload
-            label="Ảnh nền"
-            control={control}
-            imageUrl={data?.thumbnail || null}
-            name="thumbnail"
-            multiple={false}
-          />
-        </Grid>
       </Grid>
 
       <Box>
         {fields.map((field, index) => (
           <div key={field.id}>
             <ProductVariantField
+              type={type}
               isUpdate={field.variantName != ""}
               trigger={trigger}
               index={index}

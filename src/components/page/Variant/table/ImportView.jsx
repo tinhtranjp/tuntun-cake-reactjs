@@ -44,6 +44,9 @@ function ImportView({ modal, onClose, row }) {
       setValue("1")
     }
   }, [modal.open])
+
+  const isHidden = row?.sku?.split("-")[0] === "CAKE"
+
   if (!row) return null
 
   return (
@@ -60,16 +63,29 @@ function ImportView({ modal, onClose, row }) {
           <>
             <Box sx={{ width: "100%", typography: "body1" }}>
               <Box>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h6"
-                  component="h2"
+                <Stack
+                  flexDirection={"row"}
+                  alignItems={"center"}
+                  gap={2}
                 >
-                  {row.name}
-                </Typography>
+                  <TableImage
+                    alt={row.name}
+                    src={row.thumbnail}
+                    height={50}
+                    width={50}
+                  />
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    {row.name}
+                  </Typography>
+                </Stack>
                 <Stack
                   spacing={2}
                   mb={2}
+                  mt={1}
                 >
                   <Stack
                     flexDirection="row"
@@ -94,10 +110,12 @@ function ImportView({ modal, onClose, row }) {
                       label="Nhập Hàng"
                       value="1"
                     />
-                    <Tab
-                      label="Tùy chỉnh"
-                      value="2"
-                    />
+                    {!isHidden && (
+                      <Tab
+                        label="Tùy chỉnh"
+                        value="2"
+                      />
+                    )}
                     <Tab
                       label="Cập nhật"
                       value="3"

@@ -19,6 +19,7 @@ export const productApi = {
   getById: (id) => axiosClient.get("/products/" + id).then((res) => res.data),
 
   search: (params) => axiosClient.get("/products/search", { params }).then((res) => res.data),
+  searchOrders: (params) => axiosClient.get("/products/search-order", { params }).then((res) => res.data),
 
   upLoad: (files) =>
     axiosClient.post("/products/upload-img", files, {

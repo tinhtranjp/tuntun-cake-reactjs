@@ -124,14 +124,12 @@ export default function RecipeEnhancedTable() {
 
   return (
     <>
-      <Typography
-        variant="h5"
-        sx={{ pt: 4, pb: 8 }}
-      >
-        Danh sách công thức
-      </Typography>
-      <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-        <SearchInput onChangeValue={handleChangeTitle} />
+      <Box sx={{ my: 4, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+        <SearchInput
+          onChangeValue={handleChangeTitle}
+          value={title}
+          paddingYCustom="8px"
+        />
         <FormControl
           sx={{ width: 180 }}
           size="small"

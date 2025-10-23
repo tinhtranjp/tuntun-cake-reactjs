@@ -1,10 +1,11 @@
-import { TableRow, TableCell, IconButton, Collapse, Box, Button, Checkbox } from "@mui/material"
+import { TableRow, TableCell, IconButton, Collapse, Box, Button, Checkbox, Chip } from "@mui/material"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import HtmlRender from "@/components/common/HtmlRender"
 import { useState } from "react"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import TableImage from "@/components/table/TableImage"
+import { renderBackGroundPrice } from "@/helper/variant"
 export default function TableRowProduct({ row, isSelected, labelId, onClick, navigate, onOpenModal }) {
   const [open, setOpen] = useState(false)
 
@@ -34,7 +35,11 @@ export default function TableRowProduct({ row, isSelected, labelId, onClick, nav
           {row.id}
         </TableCell>
         <TableCell sx={{ width: 150 }}>
-          <TableImage src={row.thumbnail} />
+          <TableImage
+            src={row.images[0].url}
+            width={50}
+            height={50}
+          />
         </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell
@@ -56,7 +61,10 @@ export default function TableRowProduct({ row, isSelected, labelId, onClick, nav
           scope="row"
           padding="none"
         >
-          {row.basePrice}
+          <Chip
+            label={`${row.basePrice.toLocaleString("vi-VN")} ₫`}
+            color={renderBackGroundPrice(row.basePrice)}
+          />
         </TableCell>
         <TableCell
           padding="none"

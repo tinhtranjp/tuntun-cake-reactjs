@@ -6,7 +6,16 @@ import TextFieldCustom from "@/components/input-common/TextFieldCustom"
 import CheckBoxCustom from "@/components/input-common/CheckBoxCustom"
 import ImageDnd from "@/components/dnd/img/ImageDnd"
 
-export const ProductVariantField = ({ index, control, setValue, trigger, errors, remove, isUpdate }) => {
+export const ProductVariantField = ({
+  index,
+  control,
+  setValue,
+  trigger,
+  errors,
+  remove,
+  isUpdate,
+  type = "self_made",
+}) => {
   const fieldErrors = errors.variants?.[index]
 
   const handleTrigger = (e) => {
@@ -31,7 +40,6 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
       >
         Sản phẩm con {index + 1}
       </Typography>
-
       <Grid
         container
         spacing={2}
@@ -48,31 +56,20 @@ export const ProductVariantField = ({ index, control, setValue, trigger, errors,
             }}
           />
         </Grid>
-        <Grid size={3}>
-          <TextFieldCustom
-            name={`variants.${index}.flavor`}
-            control={control}
-            label="Hương vị"
-            slotProps={{
-              input: {
-                readOnly: isUpdate ? true : false,
-              },
-            }}
-          />
-        </Grid>
       </Grid>
-      <ImageDnd
-        onChange={(files) => {
-          setValue(`variants.${index}.images`, files, {
-            shouldValidate: true,
-          })
-        }}
-        initialValue={initialImgs}
-        sx={{ my: 2 }}
-        isError={!!fieldErrors?.images?.message}
-      />
+      {type !== "self_made" && (
+        <ImageDnd
+          onChange={(files) => {
+            setValue(`variants.${index}.images`, files, {
+              shouldValidate: true,
+            })
+          }}
+          initialValue={initialImgs}
+          sx={{ my: 2 }}
+          isError={!!fieldErrors?.images?.message}
+        />
+      )}
       {fieldErrors?.images && <FormHelperText error>{fieldErrors?.images?.message}</FormHelperText>}
-
       <Box mt={2}>
         <CheckBoxCustom
           control={control}

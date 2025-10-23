@@ -2,7 +2,7 @@ import { useCategoryGetAll } from "@/service/category/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { productSchema } from "./schema"
-import { Box, Button, Grid } from "@mui/material"
+import { Box, Button, FormHelperText, Grid } from "@mui/material"
 import TextFieldCustom from "@/components/input-common/TextFieldCustom"
 import AutocompleteRHF from "@/components/input-common/AutocompleteRHF"
 import { mappedStringToObj } from "@/helper/product"
@@ -10,9 +10,9 @@ import { useProductGetStatus, useProductGetType } from "@/service/product/querie
 import CkeditorCustom from "@/components/ckeditor/CkeditorCustom"
 import { useEffect } from "react"
 import { ProductVariantField } from "./ProductVariantField"
-import InputFileUpload from "@/components/input-common/InputFileUpload"
+import ImageDnd from "@/components/dnd/img/ImageDnd"
 
-function FormProduct({ onSubmit }) {
+function FormProduct({ onSubmit, type = "self_made" }) {
   const { data: categories } = useCategoryGetAll()
   const { data: status } = useProductGetStatus()
   const { data: types } = useProductGetType()
@@ -28,7 +28,7 @@ function FormProduct({ onSubmit }) {
       name: "",
       variants: [],
       basePrice: 0,
-      isHandMake: true,
+      categoryIds: [],
     },
     mode: "onSubmit",
     resolver: zodResolver(productSchema),
@@ -42,7 +42,6 @@ function FormProduct({ onSubmit }) {
   const appendVariant = () => {
     append({
       variantName: "",
-      flavor: "",
       stockQuantity: 0,
       price: 0,
       images: [],
@@ -74,13 +73,15 @@ function FormProduct({ onSubmit }) {
           />
         </Grid>
         <Grid size={4}>
-          <AutocompleteRHF
-            label="Thể loại"
-            name="categoryId"
-            multiple={false}
-            control={control}
-            options={categories?.map((c) => ({ value: c.id, label: c.name })) || []}
-          />
+          {categories && (
+            <AutocompleteRHF
+              control={control}
+              label="Thể loại"
+              name="categoryIds"
+              options={categories?.map((c) => ({ value: c.id, label: c.name }))}
+              multiple
+            />
+          )}
         </Grid>
         <Grid size={4}>
           <AutocompleteRHF
@@ -101,6 +102,19 @@ function FormProduct({ onSubmit }) {
           />
         </Grid>
         <Grid size={12}>
+          <ImageDnd
+            onChange={(files) => {
+              setValue(`images`, files, {
+                shouldValidate: true,
+              })
+            }}
+            type="add"
+            sx={{ my: 2 }}
+            isError={!!errors?.images?.message}
+          />
+          {errors?.images && <FormHelperText error>{errors?.images?.message}</FormHelperText>}
+        </Grid>
+        <Grid size={12}>
           <Controller
             name="description"
             control={control}
@@ -114,20 +128,12 @@ function FormProduct({ onSubmit }) {
             )}
           />
         </Grid>
-        <Grid size={12}>
-          <InputFileUpload
-            label="Ảnh nền"
-            control={control}
-            name="thumbnail"
-            multiple={false}
-          />
-        </Grid>
       </Grid>
-
       <Box>
         {fields.map((field, index) => (
           <div key={field.id}>
             <ProductVariantField
+              type={type}
               trigger={trigger}
               index={index}
               control={control}

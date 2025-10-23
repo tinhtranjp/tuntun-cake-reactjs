@@ -12,7 +12,7 @@ function FormRecipe({ onSubmit }) {
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm({
     mode: "onSubmit",
     resolver: zodResolver(schemaCreate),
@@ -28,7 +28,7 @@ function FormRecipe({ onSubmit }) {
     <form onSubmit={handleSubmit(onSubmitForm)}>
       <Stack
         spacing={3}
-        gap={4}
+        gap={2}
       >
         <TextFieldCustom
           name="title"

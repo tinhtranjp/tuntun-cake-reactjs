@@ -13,13 +13,17 @@ function FormCategory({ onSubmit }) {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onSubmit",
   })
 
-  const onSubmitForm = async (data) => await onSubmit(data)
+  const onSubmitForm = async (data) => {
+    await onSubmit(data)
+    reset()
+  }
   return (
     <form onSubmit={handleSubmit(onSubmitForm)}>
       <Stack spacing={3}>

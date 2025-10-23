@@ -27,7 +27,7 @@ function AddRecipe() {
   }
   return (
     <Box
-      maxWidth={1000}
+      maxWidth={800}
       marginX="auto"
     >
       <HeaderForm

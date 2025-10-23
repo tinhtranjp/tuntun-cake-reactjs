@@ -3,8 +3,8 @@ import DndImages from "./DndImages"
 import { Box } from "@mui/material"
 import isEqual from "lodash/isEqual"
 
-export default function ImageDnd({ onChange, isError, initialValue, ...props }) {
-  const [items, setItems] = useState(initialValue || [])
+export default function ImageDnd({ onChange, isError, type = "add", initialValue, ...props }) {
+  const [items, setItems] = useState([])
   const [start, setStart] = useState(false)
   const inputRef = useRef(null)
 
@@ -16,6 +16,12 @@ export default function ImageDnd({ onChange, isError, initialValue, ...props }) 
       onChange(items)
     }
   }, [items])
+
+  useEffect(() => {
+    if (initialValue && type === "update") {
+      setItems([...initialValue].sort((a, b) => (a.orderBy ?? 0) - (b.orderBy ?? 0)))
+    }
+  }, [initialValue, type])
 
   useEffect(() => {
     return () => {

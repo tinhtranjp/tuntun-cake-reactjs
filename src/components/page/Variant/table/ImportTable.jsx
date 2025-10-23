@@ -16,12 +16,13 @@ import {
   TablePagination,
 } from "@mui/material"
 import * as React from "react"
-import { useNavigate, useSearchParams } from "react-router"
 import TextInput from "@/components/input-common/TextInput"
 import { useVariantSearch } from "@/service/variant/queries"
 import ImportRow from "./ImportRow"
-import { headCells } from "./importHeaderCells"
+import { headCells } from "../helper/importHeaderCells"
 import ImportView from "./ImportView"
+import RangePrice from "@/components/table/RangePrice"
+import { useImportFilters } from "../helper/useImportFilters"
 
 export default function ImportTable() {
   const [order, setOrder] = React.useState("asc")
@@ -33,58 +34,16 @@ export default function ImportTable() {
     type: null,
   })
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const name = searchParams.get("name") ?? ""
-  const sku = searchParams.get("sku") ?? ""
-  const flavor = searchParams.get("flavor") ?? ""
-  const page = searchParams.get("page") ?? "0"
-  const limit = searchParams.get("limit") ?? "5"
-  const sort = searchParams.get("sort") ?? "id-desc"
-  const type = searchParams.get("type") ?? ""
-  const minPrice = searchParams.get("minPrice") ?? ""
-  const maxPrice = searchParams.get("maxPrice") ?? ""
+  const { filters, pageNumber, limitNumber, name, sku, type, minPrice, maxPrice, updateParams, setOrRemoveParam } =
+    useImportFilters()
 
-  const navigate = useNavigate()
-
-  // Params
-  const updateParams = (newParams) => {
-    setSearchParams(
-      (prev) => {
-        const current = Object.fromEntries(prev.entries())
-        return { ...current, ...newParams }
-      },
-      { replace: true },
-    )
-  }
-
-  React.useEffect(() => {
-    // Chỉ set default 1 lần nếu thiếu page hoặc limit
-    if (!searchParams.has("page") || !searchParams.has("limit")) {
-      updateParams({ page: "0", limit: "5" })
-    }
-  }, [])
-
-  const pageNumber = parseInt(page)
-  const limitNumber = parseInt(limit)
-  const { data } = useVariantSearch({
-    name,
-    page: pageNumber,
-    limit: limitNumber,
-    sort,
-    type,
-    sku,
-    flavor,
-    minPrice,
-    maxPrice,
-  })
+  const { data } = useVariantSearch(filters)
 
   const handleChangePage = (event, newPage) => updateParams({ page: newPage })
   const handleChangeRowsPerPage = (event) => updateParams({ page: 0, limit: parseInt(event.target.value, 10) })
   const handleChangeName = (name) => updateParams({ name })
   const handleChangeSku = (sku) => updateParams({ sku })
-
   const handleChangeType = (e) => setOrRemoveParam("type", e.target.value)
-
   const handleChangeMin = (value) => {
     setOrRemoveParam("minPrice", value.toString())
   }
@@ -92,29 +51,15 @@ export default function ImportTable() {
     setOrRemoveParam("maxPrice", value.toString())
   }
 
-  const setOrRemoveParam = (key, value) => {
-    const newParams = Object.fromEntries(searchParams.entries())
-
-    if (value === null || value === "") {
-      delete newParams[key]
-    } else {
-      const newValue = Number(value)
-      newParams[key] = !!newValue ? newValue : value
-    }
-
-    setSearchParams(newParams, { replace: true })
-  }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc"
     const sortValue = isAsc ? "desc" : "asc"
-
     setOrder(sortValue)
     setOrderBy(property)
     updateParams({ sort: `${property}-${sortValue}`, page: 0 })
   }
 
   // UI
-
   const handleOpen = (row) => {
     setModal({ open: true, row: row.id, type: row.type })
   }
@@ -154,6 +99,7 @@ export default function ImportTable() {
 
   const selectedRow = React.useMemo(() => {
     if (!data) return null
+
     return data.content.find((i) => i.id === modal.row)
   }, [data, modal.row])
 
@@ -162,8 +108,11 @@ export default function ImportTable() {
   return (
     <Box sx={{ py: 4 }}>
       <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-        <SearchInput onChangeValue={handleChangeName} />
-
+        <SearchInput
+          onChangeValue={handleChangeName}
+          value={name}
+          paddingYCustom="8px"
+        />
         <Stack
           alignItems="center"
           flexDirection="row"
@@ -171,20 +120,16 @@ export default function ImportTable() {
         >
           <TextInput
             onChangeValue={handleChangeSku}
-            label="Mã sản phẩm"
-            size="small"
+            value={sku}
+            size={"small"}
+            label={"SKU"}
+            paddingYCustom="8px"
           />
-          <TextInput
-            onChangeValue={handleChangeMin}
-            type="number"
-            label="Giá thấp nhất"
-            size="small"
-          />
-          <TextInput
-            onChangeValue={handleChangeMax}
-            type="number"
-            label="Giá cao nhất"
-            size="small"
+          <RangePrice
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            handleChangeMin={handleChangeMin}
+            handleChangeMax={handleChangeMax}
           />
           <FormControl
             sx={{ width: 180 }}
@@ -198,10 +143,10 @@ export default function ImportTable() {
               label="Type"
               onChange={handleChangeType}
             >
-              <MenuItem value="">Tất cả</MenuItem>
-              <MenuItem value="IMPORTED">IMPORTED</MenuItem>
-              <MenuItem value="SELF_MADE">SELF_MADE</MenuItem>
-              <MenuItem value="RAW_MATERIAL">RAW_MATERIAL</MenuItem>
+              <MenuItem value="all">Tất cả</MenuItem>
+              <MenuItem value="imported">IMPORTED</MenuItem>
+              <MenuItem value="self_made">SELF_MADE</MenuItem>
+              <MenuItem value="raw_material">RAW_MATERIAL</MenuItem>
             </Select>
           </FormControl>
         </Stack>

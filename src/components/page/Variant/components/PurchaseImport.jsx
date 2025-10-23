@@ -1,65 +1,41 @@
-import { usePurchaseStore, useResetType } from "@/store/PurchaseStore"
-import DeleteIcon from "@mui/icons-material/Delete"
-import { Box, Button, IconButton, Tooltip } from "@mui/material"
-import { DataGrid } from "@mui/x-data-grid"
-import InfoIcon from "@mui/icons-material/Info"
-import React, { useState } from "react"
+import TableImage from "@/components/table/TableImage"
 import { usePurchaseCreate } from "@/service/purchase-oder/mutation"
-const columns = [
-  { field: "itemId", headerName: "ID", sortable: false, flex: 0.5, editable: false },
-  { field: "sku", headerName: "Mã sản phẩm", sortable: false, flex: 1, editable: false },
-  { field: "unit", headerName: "Đơn vị", flex: 0.5, editable: true },
-  { field: "costPrice", headerName: "Giá nhập", sortable: false, type: "number", flex: 1, editable: true },
-  { field: "basePrice", headerName: "Giá bán", sortable: false, type: "number", flex: 1, editable: true },
-  { field: "quantity", headerName: "Số lượng", sortable: false, type: "number", flex: 1, editable: true },
-  { field: "discountPercent", headerName: "% KM", sortable: false, type: "number", flex: 1, editable: true },
-  { field: "discountAmount", headerName: "(amount) KM", sortable: false, type: "number", flex: 1, editable: true },
-  {
-    field: "note",
-    headerName: "Ghi chú",
-    sortable: false,
-    flex: 0.5,
-    editable: false,
-    renderCell: (params) => {
-      if (!params.value) return null
-      return (
-        <Tooltip
-          title={<div dangerouslySetInnerHTML={{ __html: params.value }} />}
-          arrow
-        >
-          <IconButton size="small">
-            <InfoIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      )
-    },
-  },
-]
-// {
-//   field: "fullName",
-//   headerName: "Full name",
-//   description: "This column has a value getter and is not sortable.",
-//   sortable: false,
-//   width: 160,
-//   valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
-// },
+import {
+  useDeleteItemsInType,
+  usePurchaseStore,
+  useResetType,
+  useUpdateItemInType,
+  useUpdateNoteInType,
+} from "@/store/PurchaseStore"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditNoteIcon from "@mui/icons-material/EditNote"
+import { Box, Button, IconButton, Stack } from "@mui/material"
+import { DataGrid } from "@mui/x-data-grid"
+import React, { useState } from "react"
+import EditableNoteModal from "./EditableNoteModal"
+import NoteCell from "./NoteCell"
 
-function PurchaseImport() {
+function PurchaseImport({ type = "import" }) {
   const [selectedIds, setSelectedIds] = useState([])
   const [rowsData, setRowsData] = useState([])
   const resetType = useResetType()
+  const [openModal, setOpenModal] = useState(false)
+  const [noteRow, setNoteRow] = useState("")
 
   const purchases = usePurchaseStore((state) => state.purchases)
+  const note = usePurchaseStore((state) => state.purchases).find((p) => p.type === type)?.note
+  const updateNote = useUpdateNoteInType()
+  const useUpdateItem = useUpdateItemInType()
+  const deleteItems = useDeleteItemsInType()
+
   // memo để flatten items
   React.useEffect(() => {
-    const listItem = purchases.filter((p) => p.type === "import").flatMap((p) => p.items)
+    const listItem = purchases.filter((p) => p.type === type).flatMap((p) => p.items)
     setRowsData(listItem)
   }, [purchases])
 
   const handleRowSelection = (selectionModel) => {
     let selectedIdsArray = []
-    console.log(selectionModel.type)
-
     if (selectionModel.type == "exclude") {
       selectedIdsArray = rowsData.map((row) => row.itemId)
     } else {
@@ -72,6 +48,7 @@ function PurchaseImport() {
   const handleProcessRowUpdate = (newRow, oldRow) => {
     // newRow là row sau khi edit
     setRowsData((prev) => prev.map((r) => (r.itemId === newRow.itemId ? newRow : r)))
+    useUpdateItem(type, newRow.itemId, newRow)
     return newRow
   }
 
@@ -80,12 +57,12 @@ function PurchaseImport() {
     if (window.confirm("Xác nhận gửi đơn hàng")) {
       try {
         const newData = {
-          note: "abc",
-          type: "import",
+          note: noteRow,
+          type: type,
           details: rowsData,
         }
         await mutationCreate.mutateAsync(newData)
-        resetType("import")
+        resetType(type)
       } catch (error) {
         console.log(error)
       }
@@ -94,19 +71,139 @@ function PurchaseImport() {
 
   const handleDeleteSelected = () => {
     if (window.confirm("Bạn có muốn xóa các sản phẩm đang chọn.")) {
+      const idsToDelete = selectedIds.map((id) => Number(id))
       setRowsData((prev) => prev.filter((r) => !selectedIds.includes(r.itemId)))
+      deleteItems(type, idsToDelete)
     }
   }
+  const handleNoteUpdate = (itemId, newNote) => {
+    setRowsData((prev) => prev.map((row) => (row.itemId === itemId ? { ...row, note: newNote } : row)))
+  }
+
+  const handleChangeNoteParent = (newNote) => {
+    updateNote(type, newNote)
+    setNoteRow(newNote)
+  }
+
+  const handleDeleteRow = (id) => {
+    if (window.confirm("Bạn có chắc muốn xóa?")) {
+      setRowsData((prevRows) => prevRows.filter((row) => row.itemId !== id))
+      deleteItems(type, [id])
+    }
+  }
+  const columns = [
+    { field: "itemId", headerName: "ID", flex: 0.5, editable: false },
+    { field: "name", headerName: "Tên sản phẩm", flex: 1, editable: false },
+    { field: "sku", headerName: "Mã sản phẩm", flex: 1, editable: false },
+    // { field: "thumbnail", headerName: "Ảnh", flex: 0.5, editable: false },
+    {
+      field: "thumbnail",
+      headerName: "Ảnh",
+      sortable: false,
+      flex: 1,
+      editable: false,
+      headerAlign: "center",
+      align: "center", // ảnh hưởng text, nhưng với renderCell không đủ
+      renderCell: (params) => (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TableImage
+            alt={params.row.sku}
+            src={params.value}
+            height={40}
+            width={40}
+          />
+        </Box>
+      ),
+    },
+    { field: "unit", headerName: "Đơn vị", flex: 0.5, editable: true },
+    { field: "costPrice", headerName: "Giá nhập", type: "number", flex: 1, editable: true },
+    { field: "basePrice", headerName: "Giá bán", type: "number", flex: 1, editable: true },
+    { field: "quantity", headerName: "Số lượng", type: "number", flex: 1, editable: true },
+    { field: "discountPercent", headerName: "% KM", type: "number", flex: 1, editable: true },
+    { field: "discountAmount", headerName: "(amount) KM", type: "number", flex: 1, editable: true },
+    {
+      field: "note",
+      headerName: "Ghi chú",
+      sortable: false,
+      flex: 0.5,
+      align: "center",
+      editable: false,
+      headerAlign: "center",
+      renderCell: (params) => (
+        <NoteCell
+          value={params.value}
+          row={params.row}
+          onUpdate={handleNoteUpdate}
+        />
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "Thao tác",
+      sortable: false,
+      flex: 0.5,
+      align: "center",
+      editable: false,
+      headerAlign: "center",
+      renderCell: (params) => (
+        <Box>
+          <Button
+            color="error"
+            onClick={() => handleDeleteRow(params.row.itemId)}
+          >
+            Xoá
+          </Button>
+        </Box>
+      ),
+    },
+  ]
   return (
     <Box sx={{ py: 2 }}>
-      <Box sx={{ mb: 2 }}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-        >
-          Xác nhận
-        </Button>
-      </Box>
+      {rowsData.length > 0 && (
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+          >
+            Xác nhận
+          </Button>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+          >
+            {selectedIds.length > 0 && (
+              <IconButton
+                color="error"
+                size="small"
+                sx={{
+                  bgcolor: "rgba(255,0,0,0.05)",
+                  "&:hover": {
+                    bgcolor: "rgba(255,0,0,0.15)",
+                    transform: "scale(1.1)",
+                  },
+                  transition: "all 0.25s ease",
+                }}
+                onClick={handleDeleteSelected}
+              >
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            )}
+            <EditNoteIcon
+              sx={{ fontSize: 40, color: "primary.main", cursor: "pointer" }}
+              onClick={() => setOpenModal(true)}
+            />
+          </Stack>
+        </Box>
+      )}
       <Box sx={{ position: "relative", display: "flex", flexDirection: "column", height: "70vh", width: "100%" }}>
         <DataGrid
           rows={rowsData}
@@ -123,23 +220,18 @@ function PurchaseImport() {
           onRowSelectionModelChange={handleRowSelection}
           processRowUpdate={handleProcessRowUpdate}
           experimentalFeatures={{ newEditingApi: true }}
-          sx={{ flex: 1 }}
+          sx={{
+            flex: 1,
+          }}
         />
-        {selectedIds.length > 0 && (
-          <DeleteIcon
-            sx={{
-              position: "absolute",
-              top: -40,
-              right: 0,
-              cursor: "pointer",
-              color: "#444",
-              fontSize: "30px",
-              transition: "all 0.3s ease-in",
-            }}
-            onClick={handleDeleteSelected}
-          />
-        )}
       </Box>
+      <EditableNoteModal
+        note={note}
+        onClose={() => setOpenModal(false)}
+        onSave={handleChangeNoteParent}
+        open={openModal}
+        isRow={false}
+      />
     </Box>
   )
 }

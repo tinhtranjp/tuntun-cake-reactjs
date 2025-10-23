@@ -16,15 +16,22 @@ function AddProduct() {
     formData.append("description", data.description)
     formData.append("status", data.status)
     formData.append("type", data.type)
-    formData.append("categoryId", data.categoryId.toString())
-    formData.append("thumbnail", data.thumbnail)
+
+    data.categoryIds.forEach((id) => {
+      formData.append("categoryIds", id.toString())
+    })
+
+    if (Array.isArray(data.images)) {
+      data.images.forEach((image) => {
+        formData.append(`images`, image.file) // ✅ chỉ file
+      })
+    }
     // Append variants as JSON string
     // formData.append("variants", JSON.stringify(data.variants));
 
     // Hoặc append từng variant riêng lẻ
     data.variants.forEach((variant, index) => {
       formData.append(`variants[${index}].variantName`, variant.variantName)
-      formData.append(`variants[${index}].flavor`, variant.flavor)
       formData.append(`variants[${index}].isDefault`, variant.isDefault ? "true" : "false")
 
       // Handle images

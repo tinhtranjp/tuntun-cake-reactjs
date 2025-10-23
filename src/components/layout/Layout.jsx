@@ -1,19 +1,10 @@
-import { AppBar, Toolbar, Drawer, Typography } from "@mui/material"
+import { AppBar, Toolbar, Drawer, Typography, Avatar } from "@mui/material"
 import Box from "@mui/material/Box"
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
-import { TreeItem } from "@mui/x-tree-view/TreeItem"
-import { useNavigate } from "react-router"
-import SidebarTree from "./SidebarTree"
+import Navbar from "./Navbar"
 
 const drawerWidth = 300
 
 export default function Layout({ children }) {
-  const navigate = useNavigate()
-
-  const handleOnClick = (url) => {
-    navigate(url)
-  }
-
   return (
     <Box sx={{ display: "flex" }}>
       <Drawer
@@ -25,7 +16,7 @@ export default function Layout({ children }) {
       >
         <Toolbar />
         <Box sx={{ minHeight: 352, minWidth: 250, paddingY: 1 }}>
-          <SidebarTree />
+          <Navbar />
         </Box>
       </Drawer>
 
@@ -46,7 +37,17 @@ export default function Layout({ children }) {
           }}
         >
           <Toolbar>
-            <Typography variant="h6">Tun Tun Cake</Typography>
+            <Avatar
+              alt="Tun Tun"
+              src="/logo.png"
+            />
+            <Typography
+              variant="h6"
+              color="#333"
+              ml={1}
+            >
+              Tun Cake
+            </Typography>
           </Toolbar>
         </AppBar>
 

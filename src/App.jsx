@@ -16,6 +16,12 @@ import {
   UpdateProduct,
   Import,
   PurchaseList,
+  Order,
+  OrderHistory,
+  PurchaseReturn,
+  OverView,
+  Analytic,
+  Sale,
 } from "@components/page"
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -26,6 +32,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { BrowserRouter, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
+import Navbar from "./components/layout/Navbar"
+import { Pushchased } from "./components/page"
 const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, "Helvetica", "Arial", sans-serif',
@@ -40,6 +48,21 @@ function App() {
           <Routes>
             {/* ----------- LayoutRoute ---------- */}
             <Route element={<LayoutRoute />}>
+              {/* ----------- dashboard start ---------- */}
+              <Route
+                path="/overviews"
+                element={<OverView />}
+              />
+              <Route
+                path="/analytics"
+                element={<Analytic />}
+              />
+              <Route
+                path="/sales"
+                element={<Sale />}
+              />
+              {/* ----------- dashboard end ---------- */}
+
               {/* ----------- category start ---------- */}
               <Route
                 path="/"
@@ -108,7 +131,24 @@ function App() {
                 path="/product/purchase/status"
                 element={<PurchaseList />}
               />
+              <Route
+                path="/product/purchase/order"
+                element={<Pushchased />}
+              />
+
               {/* ----------- product end ---------- */}
+
+              {/* ----------- order start ---------- */}
+              <Route
+                path="/order-list"
+                element={<Order />}
+              />
+
+              <Route
+                path="/order-history"
+                element={<OrderHistory />}
+              />
+              {/* ----------- order end ---------- */}
             </Route>
 
             {/* --------------------------------- */}
@@ -119,6 +159,10 @@ function App() {
             <Route
               path="/register"
               element={<Register />}
+            />
+            <Route
+              path="/nav"
+              element={<Navbar />}
             />
             <Route
               path="*"

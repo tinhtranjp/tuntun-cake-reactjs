@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { SimpleTreeView, TreeItem } from "@mui/x-tree-view"
 import { useLocation, useNavigate } from "react-router"
-
 export default function SidebarTree() {
   const location = useLocation()
   const [expanded, setExpanded] = useState([])
@@ -32,12 +31,25 @@ export default function SidebarTree() {
       onExpandedItemsChange={(event, items) => setExpanded(items)}
       onSelectedItemsChange={(event, itemId) => setSelected(itemId)}
       onItemClick={(event, itemId) => {
-        const isRoot = ["category", "recipe", "product"].includes(itemId)
+        const isRoot = ["category", "recipe", "product", "order"].includes(itemId)
         if (!isRoot) {
           navigate(`/${itemId}`)
         }
       }}
     >
+      <TreeItem
+        itemId="order"
+        label="Order"
+      >
+        <TreeItem
+          itemId="order-list"
+          label="Gọi món"
+        />
+        <TreeItem
+          itemId="order-history"
+          label="Lịch sử order"
+        />
+      </TreeItem>
       <TreeItem
         itemId="category"
         label="Thể loại"

@@ -20,3 +20,14 @@ export { default as AddProduct } from "./Product/AddProduct.jsx"
 export { default as UpdateProduct } from "./Product/UpdateProduct.jsx"
 export { default as Import } from "./Variant/Import.jsx"
 export { default as PurchaseList } from "./Variant/PurchaseList.jsx"
+export { default as Pushchased } from "./Variant/Pushchased.jsx"
+export { default as PurchaseReturn } from "./Variant/components/PurchaseReturn.jsx"
+
+//Order
+export { default as Order } from "./Order/Oder.jsx"
+export { default as OrderHistory } from "./Order/OrderHistory.jsx"
+
+// Dashboard
+export { default as OverView } from "./DashBoard/OverView.jsx"
+export { default as Analytic } from "./DashBoard/Analytic.jsx"
+export { default as Sale } from "./DashBoard/Sale.jsx"

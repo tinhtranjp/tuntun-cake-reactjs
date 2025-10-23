@@ -95,7 +95,7 @@ import {
 import "ckeditor5/ckeditor5.css"
 import "./ck.css"
 
-function CkeditorCustom({ folder, label = "Mô tả", messError, onChange, value }) {
+function CkeditorCustom({ folder, label = "Mô tả", messError, onChange, value, height = "100px", scrollable = false }) {
   function MyUploadAdapterPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
       return {
@@ -508,6 +508,14 @@ function CkeditorCustom({ folder, label = "Mô tả", messError, onChange, value
           },
         }}
         onReady={(editor) => {
+          editor.editing.view.change((writer) => {
+            const root = editor.editing.view.document.getRoot()
+            writer.setStyle("min-height", height, root)
+            if (scrollable) {
+              writer.setStyle("max-height", height, root)
+              writer.setStyle("overflow-y", "auto", root)
+            }
+          })
           editor.plugins.get("SpecialCharacters").addItems("Emoji", [
             { title: "smiley face", character: "😀" },
             { title: "rocket", character: "🚀" },

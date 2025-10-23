@@ -18,3 +18,11 @@ export const renderBackGroundPrice = (price) => {
     return "default"
   }
 }
+
+export const flavorOptions = [
+  { value: "Vanilla", label: "Gato Vani Nhân Việt Quất" },
+  { value: "Velvet", label: "Gato Red Velvet" },
+  { value: "Socola", label: "Gato Socola" },
+  { value: "Matcha", label: "Gato Trà Xanh" },
+  { value: "Matcha", label: "Gato Matcha" },
+]

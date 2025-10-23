@@ -3,6 +3,7 @@ import { productApi } from "./productApi"
 
 export const ProductKey = {
   SEARCH: "PRODUCT_SEARCH",
+  SEARCH_ORDERS: "PRODUCT_SEARCH_ORDERS",
   GET_BY_ID: "PRODUCT_GET_BY_ID",
   GET_STATUS: "PRODUCT_GET_STATUS",
   GET_TYPES: "PRODUCT_GET_TYPES",
@@ -41,5 +42,15 @@ export const useProductSearch = (params) => {
     queryFn: () => productApi.search(params),
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
+  })
+}
+
+export const useProductSearchOrders = (params) => {
+  return useQuery({
+    queryKey: [ProductKey.SEARCH_ORDERS, params],
+    queryFn: () => productApi.searchOrders(params),
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: false,
   })
 }

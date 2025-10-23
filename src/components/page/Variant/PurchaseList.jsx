@@ -5,11 +5,19 @@ import TabContext from "@mui/lab/TabContext"
 import TabList from "@mui/lab/TabList"
 import TabPanel from "@mui/lab/TabPanel"
 import PurchaseImport from "./components/PurchaseImport"
-import PurchaseAdjustment from "./components/PurchaseAdjustment"
-import PurchaseReturn from "./components/PurchaseReturn"
+import { PurchaseReturn } from ".."
+import { useSearchParams } from "react-router"
 
 export default function PurchaseList() {
   const [value, setValue] = React.useState("1")
+  const [searchParams] = useSearchParams()
+
+  const type = searchParams.get("p_type")
+  React.useEffect(() => {
+    if (type) {
+      setValue("4")
+    }
+  }, [type])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -35,16 +43,23 @@ export default function PurchaseList() {
               label="Cập Nhật"
               value="3"
             />
+            <Tab
+              label="Trả hàng"
+              value="4"
+            />
           </TabList>
         </Box>
         <TabPanel value="1">
-          <PurchaseImport />
+          <PurchaseImport type="import" />
         </TabPanel>
         <TabPanel value="2">
-          <PurchaseAdjustment />
+          <PurchaseImport type="adjustment" />
         </TabPanel>
         <TabPanel value="3">
-          <PurchaseReturn />
+          <PurchaseImport type="update" />
+        </TabPanel>
+        <TabPanel value="4">
+          <PurchaseReturn type="return" />
         </TabPanel>
       </TabContext>
     </Box>
