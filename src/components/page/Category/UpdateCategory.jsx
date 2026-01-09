@@ -11,7 +11,7 @@ function UpdateCategory() {
   const handleSubmit = async (payload) => {
     try {
       await updateMutation.mutateAsync({ id, data: payload })
-      navigate("/category-list")
+      navigate("/category/reoder")
     } catch (error) {
       console.log(error)
     }
@@ -19,7 +19,7 @@ function UpdateCategory() {
   return (
     <Box sx={{ maxWidth: "600px", margin: "0 auto" }}>
       <HeaderForm
-        title="Chỉnh sửa công thức"
+        title="Chỉnh sửa thể loại"
         isBack
       />
       <UpdateFormCategory onSubmit={handleSubmit} />

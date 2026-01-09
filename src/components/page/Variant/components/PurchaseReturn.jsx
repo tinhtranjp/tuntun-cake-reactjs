@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { useLocation } from "react-router"
 import { getPurchaseReturnColummns } from "../table/returnColumns"
 import EditableNoteModal from "./EditableNoteModal"
+import { toast } from "sonner"
 
 function PurchaseReturn({ type = "return" }) {
   const [selectedIds, setSelectedIds] = useState([])
@@ -49,6 +50,7 @@ function PurchaseReturn({ type = "return" }) {
           details: rowsData,
         }
         await mutationCreate.mutateAsync(newData)
+        toast.success("Trả hàng thành công")
         setRowsData([])
       } catch (error) {
         console.log(error)

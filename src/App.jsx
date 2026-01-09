@@ -2,7 +2,6 @@ import NotFound from "@/components/layout/NotFound"
 import UpdateCategory from "@/components/page/Category/UpdateCategory"
 import {
   AddCategory,
-  Category,
   Home,
   LayoutRoute,
   Login,
@@ -18,10 +17,10 @@ import {
   PurchaseList,
   Order,
   OrderHistory,
-  PurchaseReturn,
   OverView,
   Analytic,
   Sale,
+  ReoderCate,
 } from "@components/page"
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -69,10 +68,6 @@ function App() {
                 element={<Home />}
               />
               <Route
-                path="/category-list"
-                element={<Category />}
-              />
-              <Route
                 path="/category/add"
                 element={<AddCategory />}
               />
@@ -82,7 +77,7 @@ function App() {
               />
               <Route
                 path="/category/reoder"
-                element={<ReoderCategory />}
+                element={<ReoderCate />}
               />
               {/* ----------- category end ---------- */}
 

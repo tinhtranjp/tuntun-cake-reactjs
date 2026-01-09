@@ -46,7 +46,7 @@ export default function Layout({ children }) {
               color="#333"
               ml={1}
             >
-              Tun Cake
+              Tiệm bánh của Tun
             </Typography>
           </Toolbar>
         </AppBar>

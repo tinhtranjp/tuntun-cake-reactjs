@@ -6,8 +6,8 @@ export { default as Home } from "./Home/Home.jsx"
 
 // Category
 export { default as AddCategory } from "./Category/AddCategory.jsx"
-export { default as Category } from "./Category/Category.jsx"
 export { default as ReoderCategory } from "./Category/ReoderCategory.jsx"
+export { default as ReoderCate } from "./Category/ReorderCate.jsx"
 
 // Recipe
 export { default as Recipe } from "./Recipe/Recipe.jsx"

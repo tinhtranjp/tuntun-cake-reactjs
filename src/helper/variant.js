@@ -7,6 +7,7 @@ export const renderBackGroundQuantity = (qtt) => {
     return "error"
   }
 }
+
 export const renderBackGroundPrice = (price) => {
   if (price > 500000) {
     return "primary"
@@ -16,6 +17,18 @@ export const renderBackGroundPrice = (price) => {
     return "warning"
   } else {
     return "default"
+  }
+}
+
+export const renderBackGroundCostPrice = (price) => {
+  if (price > 500000) {
+    return "default"
+  } else if (price > 100000) {
+    return "warning"
+  } else if (price > 10000) {
+    return "success"
+  } else {
+    return "primary"
   }
 }
 

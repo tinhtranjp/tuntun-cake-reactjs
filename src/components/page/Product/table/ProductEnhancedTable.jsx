@@ -165,10 +165,10 @@ export default function ProductEnhancedTable() {
               onChange={handleChangeStatus}
             >
               <MenuItem value="all">Tất cả</MenuItem>
-              <MenuItem value="active">ACTIVE</MenuItem>
-              <MenuItem value="inactive">INACTIVE</MenuItem>
-              <MenuItem value="out_of_stock">OUT_OF_STOCK</MenuItem>
-              <MenuItem value="discontinued">DISCONTINUED</MenuItem>
+              <MenuItem value="active">Đang Bán</MenuItem>
+              <MenuItem value="inactive">Ngừng Bán</MenuItem>
+              <MenuItem value="out_of_stock">Hết Hàng</MenuItem>
+              <MenuItem value="discontinued">Ngừng Sản Xuất</MenuItem>
             </Select>
           </FormControl>
           <FormControl
@@ -184,9 +184,9 @@ export default function ProductEnhancedTable() {
               onChange={handleChangeType}
             >
               <MenuItem value="all">Tất cả</MenuItem>
-              <MenuItem value="imported">IMPORTED</MenuItem>
-              <MenuItem value="self_made">SELF_MADE</MenuItem>
-              <MenuItem value="raw_material">RAW_MATERIAL</MenuItem>
+              <MenuItem value="imported">Mua Ngoài</MenuItem>
+              <MenuItem value="self_made">Bánh Tự Làm</MenuItem>
+              <MenuItem value="raw_material">Nguyên Liệu</MenuItem>
             </Select>
           </FormControl>
         </Stack>

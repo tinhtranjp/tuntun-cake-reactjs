@@ -49,6 +49,14 @@ export const headCells = [
     sortable: true,
   },
   {
+    id: "costPrice",
+    numeric: false,
+    disablePadding: true,
+    label: "Giá nhập",
+    sortable: true,
+  },
+
+  {
     id: "price",
     numeric: false,
     disablePadding: true,

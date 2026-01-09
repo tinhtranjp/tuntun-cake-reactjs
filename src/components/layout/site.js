@@ -21,45 +21,6 @@ export const menuNavbarAdmin = [
     ],
   },
   {
-    id: 2,
-    label: "Thể loại",
-    Icon: GridViewIcon,
-    subMenu: [
-      {
-        id: 21,
-        label: "Danh sách thể loại",
-        href: "/category-list",
-      },
-      {
-        id: 22,
-        label: "Thêm thể loại",
-        href: "/category/add",
-      },
-      {
-        id: 23,
-        label: "Sắp xếp",
-        href: "/category/reoder",
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: "Công thức",
-    Icon: EventNoteIcon,
-    subMenu: [
-      {
-        id: 31,
-        label: "Danh sách công thức",
-        href: "/recipe-list",
-      },
-      {
-        id: 32,
-        label: "Thêm công thức",
-        href: "/recipe/add",
-      },
-    ],
-  },
-  {
     id: 4,
     label: "Sản phẩm",
     Icon: CakeIcon,
@@ -88,6 +49,40 @@ export const menuNavbarAdmin = [
         id: 45,
         label: "Hoá đơn nhập hàng",
         href: "/product/purchase/order",
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: "Thể loại",
+    Icon: GridViewIcon,
+    subMenu: [
+      {
+        id: 22,
+        label: "Thêm thể loại",
+        href: "/category/add",
+      },
+      {
+        id: 23,
+        label: "Sắp xếp",
+        href: "/category/reoder",
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: "Công thức",
+    Icon: EventNoteIcon,
+    subMenu: [
+      {
+        id: 31,
+        label: "Danh sách công thức",
+        href: "/recipe-list",
+      },
+      {
+        id: 32,
+        label: "Thêm công thức",
+        href: "/recipe/add",
       },
     ],
   },

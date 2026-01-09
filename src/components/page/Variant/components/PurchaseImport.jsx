@@ -14,6 +14,7 @@ import { DataGrid } from "@mui/x-data-grid"
 import React, { useState } from "react"
 import EditableNoteModal from "./EditableNoteModal"
 import NoteCell from "./NoteCell"
+import { toast } from "sonner"
 
 function PurchaseImport({ type = "import" }) {
   const [selectedIds, setSelectedIds] = useState([])
@@ -52,6 +53,7 @@ function PurchaseImport({ type = "import" }) {
     return newRow
   }
 
+  let message = ""
   const mutationCreate = usePurchaseCreate()
   const handleSubmit = async () => {
     if (window.confirm("Xác nhận gửi đơn hàng")) {
@@ -62,6 +64,13 @@ function PurchaseImport({ type = "import" }) {
           details: rowsData,
         }
         await mutationCreate.mutateAsync(newData)
+        message =
+          type === "import"
+            ? "Nhập hàng thành công"
+            : type === "adjustment"
+            ? "Chỉnh sửa đơn hàng thành công"
+            : "Cập nhật đơn hàng thành công"
+        toast.success(message)
         resetType(type)
       } catch (error) {
         console.log(error)

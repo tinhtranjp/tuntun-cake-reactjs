@@ -64,7 +64,8 @@ function ViewModal({ modal, onClose, row, onToggleVariant, variantDeleted }) {
                     </Typography>
                   </Stack>
                 </Stack>
-                <Typography>Giá tiền : {v.price}</Typography>
+                <Typography>Giá nhập : {v.costPrice.toLocaleString("vi-VN")} ₫</Typography>
+                <Typography>Giá bán : {v.price}</Typography>
                 <Typography>Số lượng : {v.stockQuantity}</Typography>
 
                 {variantDeleted == "false" && (

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react"
 import { useCategoryGetAll } from "@/service/category/queries"
 import { Box, Button } from "@mui/material"
 import { useCategoryReorder } from "@/service/category/mutation"
-import { useNavigate } from "react-router"
 import HeaderForm from "@/components/common/HederForm"
 import DndTasks from "@/components/dnd/task/DndTasks"
 
 function ReoderCategory() {
   const [cates, setCates] = useState([])
   const { data } = useCategoryGetAll()
-  const navigate = useNavigate()
+
   const reorderMutation = useCategoryReorder()
   useEffect(() => {
     if (data) {

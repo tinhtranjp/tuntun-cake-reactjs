@@ -1,7 +1,7 @@
 import TableImage from "@/components/table/TableImage"
 import { Badge, Box, Button, Checkbox, Chip, Stack, TableCell, TableRow } from "@mui/material"
 import VisibilityIcon from "@mui/icons-material/Visibility"
-import { renderBackGroundPrice, renderBackGroundQuantity } from "@/helper/variant"
+import { renderBackGroundCostPrice, renderBackGroundPrice, renderBackGroundQuantity } from "@/helper/variant"
 import { useGetItemByTypeAndId } from "@/store/PurchaseStore"
 export default function ImportRow({ row, isSelected, labelId, onClick, onOpenModal }) {
   const currentItem = useGetItemByTypeAndId("import", row.id)
@@ -64,7 +64,6 @@ export default function ImportRow({ row, isSelected, labelId, onClick, onOpenMod
               />
             </Stack>
           )}
-
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Badge
               badgeContent={currentItem && currentItem.quantity}
@@ -86,6 +85,17 @@ export default function ImportRow({ row, isSelected, labelId, onClick, onOpenMod
           <Chip
             label={row.stockQuantity}
             color={renderBackGroundQuantity(row.stockQuantity)}
+          />
+        </TableCell>
+        <TableCell
+          component="th"
+          id={labelId}
+          scope="row"
+          padding="none"
+        >
+          <Chip
+            label={`${row.costPrice?.toLocaleString("vi-VN")}  đ`}
+            color={renderBackGroundCostPrice(row?.costPrice)}
           />
         </TableCell>
         <TableCell

@@ -1,0 +1,66 @@
+// select order cua hom nay voi hom qua
+
+SELECT *
+FROM orders
+WHERE created_at >= CURDATE() - INTERVAL 1 DAY
+  AND created_at < CURDATE() + INTERVAL 1 DAY;
+
+
+// select tong product ban dc , tong order ban duoc , tong so tien   cuan ngay hom nay va hom qua
+
+SELECT
+  CASE
+    WHEN DATE(o.created_at) = CURDATE() THEN 'today'
+    WHEN DATE(o.created_at) = CURDATE() - INTERVAL 1 DAY THEN 'yesterday'
+  END AS day_type,
+  COUNT(DISTINCT o.id) AS total_orders,
+  SUM(od.quantity) AS total_products_sold,
+  SUM(o.total_amount) AS total_revenue
+FROM orders o
+JOIN order_details od ON o.id = od.order_id
+WHERE DATE(o.created_at) IN (CURDATE(), CURDATE() - INTERVAL 1 DAY)
+GROUP BY day_type;
+
+{
+  "code": 200,
+  "message": "Lấy dữ liệu thành công.",
+  "data": [
+    {
+      "dayType": "today",
+      "totalOrders": 10,
+      "totalProductsSold": 32,
+      "totalRevenue": 25471105
+    },
+    {
+      "dayType": "yesterday",
+      "totalOrders": 6,
+      "totalProductsSold": 24,
+      "totalRevenue": 21352220
+    }
+  ]
+}
+
+// select tong so product group by
+
+SELECT 
+  item_name,
+  COUNT(*) AS total_records
+FROM order_details
+WHERE DATE(created_at) IN (CURDATE(), CURDATE() - INTERVAL 1 DAY)
+GROUP BY item_name;
+
+
+
+// select top san pham ban trong ngay
+
+SELECT 
+  item_name,
+  product_image,
+  SUM(quantity) AS total_sold
+FROM order_details
+WHERE DATE(created_at) = CURDATE()
+GROUP BY item_name, product_image
+ORDER BY total_sold DESC
+LIMIT 10;
+
+// select 

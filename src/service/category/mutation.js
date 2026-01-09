@@ -4,10 +4,13 @@ import { categoryApi } from "./categoryApi"
 import { CateKey } from "./queries"
 
 export function useCategoryCreate() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (categoryRQ) => categoryApi.add(categoryRQ),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [CateKey.GET_ALL] })
       toast.success("Thêm thể loại thành công.")
     },
 

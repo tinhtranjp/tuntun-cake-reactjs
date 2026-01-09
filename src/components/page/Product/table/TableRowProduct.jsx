@@ -9,6 +9,8 @@ import { renderBackGroundPrice } from "@/helper/variant"
 export default function TableRowProduct({ row, isSelected, labelId, onClick, navigate, onOpenModal }) {
   const [open, setOpen] = useState(false)
 
+  console.log(row)
+
   return (
     <>
       <TableRow

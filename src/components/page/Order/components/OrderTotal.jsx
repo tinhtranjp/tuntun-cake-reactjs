@@ -15,6 +15,7 @@ import { useOrderCreate } from "@/service/order/mutation"
 import ProductModal from "./ProductModal"
 import TableImage from "@/components/table/TableImage"
 import ActionQuantity from "./ActionQantity"
+import { toast } from "sonner"
 
 function TotalOrder() {
   const [isOrder, setIsOrder] = useState(true)
@@ -90,8 +91,14 @@ function TotalOrder() {
 
     if (!proceed) return
 
+    let message = isOrder ? "Đặt hàng thành công !" : "Trả hàng thành công !"
+
     try {
       await orderMutation.mutateAsync(order)
+      toast.success(message, {
+        position: "bottom-center",
+      })
+
       resetOrder()
     } catch (error) {
       // Có thể log error nếu muốn

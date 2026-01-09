@@ -14,8 +14,6 @@ function Row(props) {
   const { row } = props
   console.log(row)
 
-  const [open, setOpen] = React.useState(false)
-
   const discountColors = [
     { threshold: 80, color: deepPurple[500] },
     { threshold: 60, color: deepOrange[500] },
