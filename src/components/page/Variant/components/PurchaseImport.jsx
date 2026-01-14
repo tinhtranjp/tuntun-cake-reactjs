@@ -15,7 +15,6 @@ import React, { useState } from "react"
 import EditableNoteModal from "./EditableNoteModal"
 import NoteCell from "./NoteCell"
 import { toast } from "sonner"
-
 function PurchaseImport({ type = "import" }) {
   const [selectedIds, setSelectedIds] = useState([])
   const [rowsData, setRowsData] = useState([])
@@ -58,11 +57,23 @@ function PurchaseImport({ type = "import" }) {
   const handleSubmit = async () => {
     if (window.confirm("Xác nhận gửi đơn hàng")) {
       try {
+        const newPayload = rowsData.map((r) => ({
+          variantId: r.itemId,
+          quantity: r.quantity,
+          salePrice: r.salePrice,
+          costPrice: r.costPrice ?? 0,
+          originalPrice: r.originalPrice ?? 0,
+          note: r.note ?? "",
+          discountAmount: r.discountAmount ?? 0,
+          discountPercent: r.discountPercent ?? 0,
+        }))
+
         const newData = {
           note: noteRow,
-          type: type,
-          details: rowsData,
+          type: type.toUpperCase(),
+          details: newPayload,
         }
+
         await mutationCreate.mutateAsync(newData)
         message =
           type === "import"
@@ -100,10 +111,10 @@ function PurchaseImport({ type = "import" }) {
       deleteItems(type, [id])
     }
   }
+
   const columns = [
     { field: "itemId", headerName: "ID", flex: 0.5, editable: false },
     { field: "name", headerName: "Tên sản phẩm", flex: 1, editable: false },
-    { field: "sku", headerName: "Mã sản phẩm", flex: 1, editable: false },
     // { field: "thumbnail", headerName: "Ảnh", flex: 0.5, editable: false },
     {
       field: "thumbnail",
@@ -132,9 +143,9 @@ function PurchaseImport({ type = "import" }) {
         </Box>
       ),
     },
-    { field: "unit", headerName: "Đơn vị", flex: 0.5, editable: true },
     { field: "costPrice", headerName: "Giá nhập", type: "number", flex: 1, editable: true },
-    { field: "basePrice", headerName: "Giá bán", type: "number", flex: 1, editable: true },
+    { field: "salePrice", headerName: "Giá bán", type: "number", flex: 1, editable: true },
+    { field: "originalPrice", headerName: "Giá niêm yết", type: "number", flex: 1, editable: true },
     { field: "quantity", headerName: "Số lượng", type: "number", flex: 1, editable: true },
     { field: "discountPercent", headerName: "% KM", type: "number", flex: 1, editable: true },
     { field: "discountAmount", headerName: "(amount) KM", type: "number", flex: 1, editable: true },
@@ -164,12 +175,9 @@ function PurchaseImport({ type = "import" }) {
       headerAlign: "center",
       renderCell: (params) => (
         <Box>
-          <Button
-            color="error"
-            onClick={() => handleDeleteRow(params.row.itemId)}
-          >
-            Xoá
-          </Button>
+          <IconButton onClick={() => handleDeleteRow(params.row.itemId)}>
+            <DeleteIcon />
+          </IconButton>
         </Box>
       ),
     },

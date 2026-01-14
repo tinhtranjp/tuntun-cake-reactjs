@@ -1,13 +1,13 @@
 import CkeditorCustom from "@/components/ckeditor/CkeditorCustom"
+import RHFTextNumber from "@/components/input-common/RHFTextNumber"
 import TextFieldCustom from "@/components/input-common/TextFieldCustom"
+import { usePurchaseOrderLastedDetails } from "@/service/purchase-oder/queries"
+import { useAddItemToType } from "@/store/PurchaseStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Box, Button, Chip, Grid, Stack } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
-import { AdjustmentSchema, ImportSchema, updateSchema } from "./schema"
 import { toast } from "sonner"
-import { useAddItemToType } from "@/store/PurchaseStore"
-import RHFTextNumber from "@/components/input-common/RHFTextNumber"
-import { usePurchaseOrderLastedDetails } from "@/service/purchase-oder/queries"
+import { purchaseSchema } from "./schema"
 const RenderChips = ({ data, onClick, isNumber = false }) => {
   if (!data?.length) return null
   return (
@@ -31,25 +31,27 @@ const RenderChips = ({ data, onClick, isNumber = false }) => {
 }
 
 function ActionForm({ variant, onClose, type = "import" }) {
-  let schema = ImportSchema
-  if (type == "adjustment") {
-    schema = AdjustmentSchema
-  } else if (type == "update") {
-    schema = updateSchema
-  }
-
-  const { data: lastedDetails } = usePurchaseOrderLastedDetails({ sku: variant?.sku, qtt: 3 })
+  const { data: lastedDetails } = usePurchaseOrderLastedDetails({
+    id: variant?.id,
+    type: type.toLocaleUpperCase(),
+    qtt: 3,
+  })
 
   const mapped = lastedDetails?.reduce(
     (acc, item) => {
-      acc.basePrice.push(item.basePrice)
-      acc.unit.push(item.unit)
-      acc.variantName.push(item.variantName)
+      acc.quantity.push(item.quantity)
       acc.costPrice.push(item.costPrice)
+      acc.originalPrice.push(item.originalPrice)
+      acc.salePrice.push(item.salePrice)
       return acc
     },
-    { basePrice: [], unit: [], variantName: [], costPrice: [] },
+    { quantity: [], costPrice: [], originalPrice: [], salePrice: [] },
   )
+
+  let productName = variant.productName
+  variant?.poDetails?.forEach((po) => {
+    productName += ` - ${po.name} x ${po.povDetails[0].value}`
+  })
 
   const {
     handleSubmit,
@@ -58,20 +60,19 @@ function ActionForm({ variant, onClose, type = "import" }) {
     formState: { isSubmitting },
   } = useForm({
     defaultValues: {
-      name: variant?.name || "",
-      thumbnail: variant?.thumbnail || "",
-      itemId: variant?.id,
-      unit: variant?.unit ?? "",
+      itemId: variant.id,
+      name: productName,
+      thumbnail: variant.thumbnail,
+      note: "",
+      quantity: "",
       costPrice: variant?.costPrice ?? "",
-      basePrice: variant?.price ?? "",
-      sku: variant.sku,
-      discountPercent: variant?.discountPercent ?? 0,
+      originalPrice: variant?.originalPrice ?? "",
+      salePrice: variant?.salePrice ?? "",
       discountAmount: variant?.discountAmount ?? 0,
-      productImage: variant?.thumbnail ?? null,
-      itemName: variant?.name ?? null,
+      discountPercent: variant?.discountPercent ?? 0,
     },
     mode: "onSubmit",
-    resolver: zodResolver(schema),
+    resolver: zodResolver(purchaseSchema),
   })
 
   const add = useAddItemToType()
@@ -96,16 +97,9 @@ function ActionForm({ variant, onClose, type = "import" }) {
         spacing={2}
       >
         <RenderChips
-          data={mapped?.unit}
-          onClick={(val) => setValue("unit", val)}
+          data={mapped?.quantity}
+          onClick={(val) => setValue("quantity", val)}
         />
-        <Grid size={12}>
-          <TextFieldCustom
-            label="Hộp, cái, kg ..."
-            name="unit"
-            control={control}
-          />
-        </Grid>
         <Grid size={12}>
           <TextFieldCustom
             label="Số lượng"
@@ -125,15 +119,28 @@ function ActionForm({ variant, onClose, type = "import" }) {
             control={control}
           />
         </Grid>
+
         <RenderChips
-          data={mapped?.basePrice}
-          onClick={(val) => setValue("basePrice", val)}
+          data={mapped?.originalPrice}
+          onClick={(val) => setValue("originalPrice", val)}
+          isNumber
+        />
+        <Grid size={12}>
+          <RHFTextNumber
+            label="Giá niêm yết"
+            name="originalPrice"
+            control={control}
+          />
+        </Grid>
+        <RenderChips
+          data={mapped?.salePrice}
+          onClick={(val) => setValue("salePrice", val)}
           isNumber
         />
         <Grid size={12}>
           <RHFTextNumber
             label="Giá bán"
-            name="basePrice"
+            name="salePrice"
             control={control}
           />
         </Grid>
@@ -158,7 +165,7 @@ function ActionForm({ variant, onClose, type = "import" }) {
             control={control}
             render={({ field, fieldState }) => (
               <CkeditorCustom
-                folder="purchase-import"
+                folder="purchase-import/note"
                 onChange={(value) => field.onChange(value)}
                 label="Ghi chú"
                 messError={fieldState?.error?.message}

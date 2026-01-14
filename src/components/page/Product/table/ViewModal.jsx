@@ -1,12 +1,13 @@
-import { Modal, Box, Typography, Chip, Grid, Stack, FormControlLabel } from "@mui/material"
+import { Modal, Box, Typography, Chip, Stack, Button } from "@mui/material"
 import { styleModal } from "@/components/table/styles"
 import TableImage from "@/components/table/TableImage"
-import { IOSSwitch } from "@/assets/icon/IOSSwitch"
-
-function ViewModal({ modal, onClose, row, onToggleVariant, variantDeleted }) {
+import { getDefaultImg } from "@/helper/common"
+import { getValue } from "@/helper/product"
+import { useNavigate } from "react-router"
+import Grid from "@mui/material/Grid"
+function ViewModal({ modal, onClose, row }) {
+  const navigate = useNavigate()
   if (!row) return null
-
-  console.log(row)
 
   return (
     <Modal
@@ -16,90 +17,128 @@ function ViewModal({ modal, onClose, row, onToggleVariant, variantDeleted }) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={styleModal}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
+        <Stack
+          direction={"row"}
+          gap={2}
         >
-          {row.name}
-        </Typography>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
+            {row.name}
+          </Typography>
+          <Button onClick={() => navigate("/variant/reorder/" + row.id)}>Cập nhật vị trí</Button>
+        </Stack>
         <Grid
           container
-          spacing={2}
+          spacing={4}
         >
-          {row.variants?.map((v) => (
+          {row.pvDetails?.map((v) => (
             <Grid
               size={6}
-              spacing={10}
+              spacing={4}
               key={v.id}
             >
-              <Stack spacing={2}>
-                <Stack
-                  flexDirection="row"
-                  gap={1}
-                  alignItems="center"
-                >
-                  <Typography>Mã sản phẩm : </Typography>
-                  <Chip
-                    label={v.sku}
-                    color="primary"
+              <Stack
+                flexDirection="row"
+                flexWrap={"wrap"}
+                gap={1}
+              >
+                {v.images?.map((i) => (
+                  <TableImage
+                    alt={v.sku + i.orderBy}
+                    src={i.url}
+                    key={i.id}
                   />
-                </Stack>
-                <Stack
-                  flexDirection="row"
-                  gap={2}
+                ))}
+              </Stack>
+              {v.images?.length == 0 && <TableImage src={getDefaultImg(v?.images)} />}
+              <Box>
+                <Button
+                  variant="outlined"
+                  onClick={() => navigate(`/variant/${v.id}/update`)}
+                  sx={{ mt: 2 }}
                 >
-                  <Stack
-                    flexDirection="row"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Size : </Typography>
-                    <Typography
-                      sx={(theme) => ({
-                        color: theme.palette.primary.main,
-                      })}
+                  Cập nhật ảnh
+                </Button>
+              </Box>
+              <Stack
+                spacing={2}
+                mt={2}
+              >
+                <Box>
+                  Trạng thái :{" "}
+                  <Chip
+                    label={getValue(v?.status)}
+                    size="small"
+                    color={row.status === "ACTIVE" ? "success" : row.status === "OUT_OF_STOCK" ? "error" : "default"}
+                  />{" "}
+                </Box>
+                <Stack gap={2}>
+                  {v.poDetails?.map((po) => (
+                    <Box
+                      key={po.id}
+                      sx={{ fontSize: 14 }}
                     >
-                      {v.variantName}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Typography>Giá nhập : {v.costPrice.toLocaleString("vi-VN")} ₫</Typography>
-                <Typography>Giá bán : {v.price}</Typography>
-                <Typography>Số lượng : {v.stockQuantity}</Typography>
-
-                {variantDeleted == "false" && (
-                  <Stack
-                    flexDirection="row"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Trạng thái : </Typography>
-                    <FormControlLabel
-                      onChange={() => onToggleVariant?.(v.id)}
-                      control={
-                        <IOSSwitch
-                          sx={{ m: 1 }}
-                          checked={!v.isDeleted}
-                        />
-                      }
-                    />
-                  </Stack>
-                )}
-
-                <Stack
-                  flexDirection="row"
-                  flexWrap={"wrap"}
-                  gap={1}
-                >
-                  {v.images?.map((i) => (
-                    <TableImage
-                      alt={v.sku + i.orderBy}
-                      src={i.url}
-                      key={i.id}
-                    />
+                      {po.name} : {po?.povDetails[0]?.value}
+                    </Box>
                   ))}
                 </Stack>
+
+                <Grid
+                  container
+                  columnSpacing={2}
+                  rowSpacing={0.5}
+                >
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <Typography
+                      variant="body2"
+                      noWrap
+                    >
+                      Giá nhập: {v?.costPrice?.toLocaleString("vi-VN")} ₫
+                    </Typography>
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <Typography
+                      variant="body2"
+                      noWrap
+                    >
+                      Giá niêm yết: {v?.originalPrice?.toLocaleString("vi-VN")} ₫
+                    </Typography>
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <Typography
+                      variant="body2"
+                      noWrap
+                    >
+                      Giá bán: {v?.salePrice?.toLocaleString("vi-VN")} ₫
+                    </Typography>
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <Typography
+                      variant="body2"
+                      noWrap
+                    >
+                      Số lượng kho: {v?.stockQuantity ?? 0}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Stack>
             </Grid>
           ))}

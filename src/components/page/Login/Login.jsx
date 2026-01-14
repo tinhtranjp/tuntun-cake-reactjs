@@ -10,14 +10,10 @@ function login() {
   const loginMutation = useUserLogin()
 
   const handleLogin = async (loginData) => {
-    try {
-      const res = await loginMutation.mutateAsync(loginData)
-      if (res) {
-        setUser(res)
-        navigate("/")
-      }
-    } catch (error) {
-      console.log(error)
+    const res = await loginMutation.mutateAsync(loginData)
+    if (res) {
+      setUser(res)
+      navigate("/")
     }
   }
 

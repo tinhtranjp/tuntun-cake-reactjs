@@ -31,3 +31,12 @@ export { default as OrderHistory } from "./Order/OrderHistory.jsx"
 export { default as OverView } from "./DashBoard/OverView.jsx"
 export { default as Analytic } from "./DashBoard/Analytic.jsx"
 export { default as Sale } from "./DashBoard/Sale.jsx"
+
+// ProductVariant
+export { default as AddVariant } from "./ProductVariant/AddVariant.jsx"
+export { default as UpdateVariant } from "./ProductVariant/UpdateVariant.jsx"
+export { default as VariantReorder } from "./ProductVariant/VariantReorder.jsx"
+
+// Options
+export { default as Option } from "./Options/Options.jsx"
+export { default as OptionValue } from "./Options/OptionValue.jsx"

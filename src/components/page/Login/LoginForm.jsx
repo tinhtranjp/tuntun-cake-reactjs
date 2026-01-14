@@ -11,7 +11,7 @@ import EmailModal from "./EmailModal"
 
 const schema = z.object({
   email: z.string({ error: "Không được để trống." }).email({ error: "Vui lòng điền email hợp lệ." }),
-  password: z.string({ error: "Không được để trống." }).min(10, "Vui lòng nhập ít nhất 10 kí tự."),
+  password: z.string({ error: "Không được để trống." }).min(8, "Vui lòng nhập ít nhất 8 kí tự."),
 })
 
 function LoginForm({ onLogin }) {

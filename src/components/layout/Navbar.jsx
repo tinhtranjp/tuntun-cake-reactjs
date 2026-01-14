@@ -63,7 +63,7 @@ function Navbar() {
       style={{
         height: "calc(100vh - 80px)",
         overflow: "auto",
-        padding: "0 20px 14px",
+        padding: "0 8px 8px",
       }}
     >
       {/* --- MENU CHÍNH --- */}
@@ -82,7 +82,6 @@ function Navbar() {
                 flexDirection="row"
                 alignItems="center"
                 gap={2}
-                mx={-2}
                 sx={{
                   py: 1,
                   px: 2,
@@ -97,7 +96,7 @@ function Navbar() {
                   transition: "all 0.2s ease",
                 }}
               >
-                <Icon sx={{ fontSize: 25 }} />
+                <Icon sx={{ fontSize: 20 }} />
                 {item.label}
               </Stack>
             )

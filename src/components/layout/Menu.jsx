@@ -37,7 +37,7 @@ export default function Menu({ items, menuState, toggleMenu, depth = 0 }) {
                     color: "#1e88e5",
                   },
                 }}
-                style={{ paddingLeft: `${depth * 24}px` }}
+                style={{ paddingLeft: `${depth * 4}px` }}
                 onClick={() => navigate(item.href)}
               >
                 <Stack
@@ -55,23 +55,22 @@ export default function Menu({ items, menuState, toggleMenu, depth = 0 }) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  p: 2,
-                  pr: 4,
+                  p: 1,
                   gap: 2,
                   borderTopRightRadius: "999px",
                   borderBottomRightRadius: "999px",
                 }}
-                style={{ paddingLeft: `${depth * 24}px` }}
+                style={{ paddingLeft: `${depth * 4}px` }}
               >
                 <Stack
                   flexDirection={"row"}
-                  alignItems={"end"}
+                  alignItems={"center"}
                   gap={2}
                 >
                   {item.Icon ? (
-                    <item.Icon style={{ fontSize: "25px", color: "#444" }} />
+                    <item.Icon style={{ fontSize: "20px", color: "#444" }} />
                   ) : (
-                    <PanoramaFishEyeIcon style={{ fontSize: "25px" }} />
+                    <PanoramaFishEyeIcon style={{ fontSize: "20px" }} />
                   )}
                   {item.label}
                 </Stack>

@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Drawer, Typography, Avatar } from "@mui/material"
 import Box from "@mui/material/Box"
 import Navbar from "./Navbar"
 
-const drawerWidth = 300
+const drawerWidth = 200
 
 export default function Layout({ children }) {
   return (
@@ -15,7 +15,7 @@ export default function Layout({ children }) {
         }}
       >
         <Toolbar />
-        <Box sx={{ minHeight: 352, minWidth: 250, paddingY: 1 }}>
+        <Box sx={{ minHeight: 352, paddingY: 1 }}>
           <Navbar />
         </Box>
       </Drawer>

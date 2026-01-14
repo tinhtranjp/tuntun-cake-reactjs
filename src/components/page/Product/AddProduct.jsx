@@ -7,6 +7,7 @@ import { useNavigate } from "react-router"
 function AddProduct() {
   const navigate = useNavigate()
   const createMutation = useProductCreate()
+
   const handleSubmit = async (data) => {
     // Tạo FormData
     const formData = new FormData()
@@ -26,25 +27,10 @@ function AddProduct() {
         formData.append(`images`, image.file) // ✅ chỉ file
       })
     }
-    // Append variants as JSON string
-    // formData.append("variants", JSON.stringify(data.variants));
-
-    // Hoặc append từng variant riêng lẻ
-    data.variants.forEach((variant, index) => {
-      formData.append(`variants[${index}].variantName`, variant.variantName)
-      formData.append(`variants[${index}].isDefault`, variant.isDefault ? "true" : "false")
-
-      // Handle images
-      if (Array.isArray(variant.images)) {
-        variant.images.forEach((image) => {
-          formData.append(`variants[${index}].images`, image.file) // ✅ chỉ file
-        })
-      }
-    })
 
     try {
-      await createMutation.mutateAsync(formData)
-      navigate("/product-list")
+      const res = await createMutation.mutateAsync(formData)
+      navigate(`/variant/${res.id}/add`)
     } catch (error) {
       console.error("Validation error:", error)
     }

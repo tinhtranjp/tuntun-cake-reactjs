@@ -1,7 +1,7 @@
-const getValue = (value) => {
-  switch (value) {
+export const getValue = (value) => {
+  switch (value.toLocaleUpperCase()) {
     case "ACTIVE":
-      return "Đang Bán"
+      return "ACTIVE"
     case "INACTIVE":
       return "Ngừng Bán"
     case "OUT_OF_STOCK":

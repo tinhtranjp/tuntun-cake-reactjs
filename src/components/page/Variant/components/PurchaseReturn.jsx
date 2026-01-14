@@ -46,7 +46,7 @@ function PurchaseReturn({ type = "return" }) {
       try {
         const newData = {
           note: noteRow,
-          type,
+          type: type.toLocaleUpperCase(),
           details: rowsData,
         }
         await mutationCreate.mutateAsync(newData)
@@ -123,7 +123,7 @@ function PurchaseReturn({ type = "return" }) {
         <DataGrid
           rows={rowsData}
           columns={columns}
-          getRowId={(row) => row.itemId}
+          getRowId={(row) => row.variantId}
           initialState={{
             pagination: {
               paginationModel: { pageSize: 5 },

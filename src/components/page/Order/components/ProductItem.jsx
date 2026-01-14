@@ -34,8 +34,9 @@ export default function ProductItem({ product }) {
         <Typography
           textAlign={"end"}
           mt={2}
+          variant="body2"
         >
-          {product.basePrice.toLocaleString("vi-VN")} ₫
+          {product.minPrice.toLocaleString("vi-VN")} - {product.maxPrice.toLocaleString("vi-VN")} đ
         </Typography>
       </Stack>
     </Card>

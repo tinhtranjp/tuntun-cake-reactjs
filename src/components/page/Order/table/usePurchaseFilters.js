@@ -9,7 +9,7 @@ export function usePurchaseFilters() {
   const page = Number(searchParams.get("page") ?? 0)
   const limit = Number(searchParams.get("limit") ?? 10)
   const sort = searchParams.get("sort") ?? null
-  const status = searchParams.get("status") ?? "all"
+  const type = searchParams.get("type") ?? "ALL"
   const minPrice = searchParams.get("minPrice") ?? ""
   const maxPrice = searchParams.get("maxPrice") ?? ""
 
@@ -28,13 +28,13 @@ export function usePurchaseFilters() {
       limit,
       sort,
       code,
-      status,
+      type,
       minPrice,
       maxPrice,
       startDate,
       endDate,
     }),
-    [page, limit, sort, code, status, minPrice, maxPrice, startDate, endDate],
+    [page, limit, sort, code, type, minPrice, maxPrice, startDate, endDate],
   )
 
   return {
@@ -43,7 +43,7 @@ export function usePurchaseFilters() {
     limit,
     sort,
     code,
-    status,
+    type,
     minPrice,
     maxPrice,
     startDate,

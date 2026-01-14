@@ -1,11 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { productApi } from "./productApi"
 import { ProductKey } from "./queries"
+import { toast } from "sonner"
+import { handleApiError } from "@/helper/api"
 
 export function useProductCreate() {
   return useMutation({
     mutationFn: (data) => productApi.add(data),
-    onSuccess: () => {},
+    onSuccess: () => {
+      toast.success("Tạo sản phẩm thành công")
+    },
+
+    onError: (error) => {
+      handleApiError(error)
+    },
   })
 }
 

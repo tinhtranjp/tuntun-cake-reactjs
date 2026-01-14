@@ -30,22 +30,19 @@ function TotalOrder() {
   const currentOrder = useOrderById(selectedId)
 
   const totalAmount = useTotalAmount()
-  const [prevLength, setPrevLength] = useState(orderDetails.length)
   const buttomRef = useRef(null)
   const orderMutation = useOrderCreate()
   const resetOrder = useResetAllOrder()
+  const prevLastIdRef = useRef(null)
 
   useEffect(() => {
-    if (orderDetails.length > 0) {
-      // Lấy ID của item cuối cùng
-      const lastItemId = orderDetails[orderDetails.length - 1].id
+    if (orderDetails.length === 0) return
 
-      // Mỗi khi item cuối thay đổi (dù length không đổi) → scroll
-      if (buttomRef.current) {
-        buttomRef.current.scrollIntoView({ behavior: "smooth" })
-      }
+    const lastId = orderDetails[orderDetails.length - 1].id
 
-      setPrevLength(lastItemId)
+    if (lastId !== prevLastIdRef.current) {
+      buttomRef.current?.scrollIntoView({ behavior: "smooth" })
+      prevLastIdRef.current = lastId
     }
   }, [orderDetails])
 
@@ -78,12 +75,12 @@ function TotalOrder() {
 
   const handleOrder = async () => {
     const order = {
-      preOrderFlag: false,
-      scheduledDate: null,
-      deposit: 0,
       note: "",
-      status: isOrder ? "done" : "return",
-      orderDetails,
+      type: isOrder ? "BUY" : "RETURN",
+      details: orderDetails.map((detail) => {
+        const { itemId, size, productImage, itemName, quantity, discountAmount, discountPercent } = detail
+        return { itemId, size, productImage, itemName, quantity, discountAmount, discountPercent }
+      }),
     }
 
     // Nếu là trả hàng, hỏi confirm
@@ -95,9 +92,7 @@ function TotalOrder() {
 
     try {
       await orderMutation.mutateAsync(order)
-      toast.success(message, {
-        position: "bottom-center",
-      })
+      toast.success(message)
 
       resetOrder()
     } catch (error) {
@@ -187,6 +182,14 @@ function TotalOrder() {
                     Giảm giá : {od.discountPercent} %
                   </Typography>
                 )}
+                {!isShowResultPrice(od) && (
+                  <Typography
+                    variant="caption"
+                    color="#1976D2"
+                  >
+                    Size : {od.size}
+                  </Typography>
+                )}
                 <Stack
                   direction="row"
                   alignItems={"center"}
@@ -194,14 +197,6 @@ function TotalOrder() {
                   justifyContent="space-between"
                 >
                   <Stack>
-                    {!isShowResultPrice(od) && (
-                      <Typography
-                        variant="caption"
-                        color="#1976D2"
-                      >
-                        Size : {od.size}
-                      </Typography>
-                    )}
                     <Typography
                       variant="caption"
                       sx={{
@@ -210,7 +205,7 @@ function TotalOrder() {
                         color: isShowResultPrice(od) ? "#555" : isOrder ? "#357a38" : "#c92127",
                       }}
                     >
-                      {od.price.toLocaleString("vi-VN")} ₫
+                      {od?.price?.toLocaleString("vi-VN")} ₫
                     </Typography>
                     {isShowResultPrice(od) && (
                       <Typography

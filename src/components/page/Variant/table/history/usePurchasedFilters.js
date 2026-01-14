@@ -9,7 +9,7 @@ export function usePurchasedFilters() {
   const page = Number(searchParams.get("page") ?? 0)
   const limit = Number(searchParams.get("limit") ?? 10)
   const sort = searchParams.get("sort") ?? null
-  const type = searchParams.get("type") ?? "all"
+  const type = searchParams.get("type") ?? "ALL"
   const minPrice = searchParams.get("minPrice") ?? ""
   const maxPrice = searchParams.get("maxPrice") ?? ""
 

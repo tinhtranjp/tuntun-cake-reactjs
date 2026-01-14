@@ -10,9 +10,9 @@ import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import * as React from "react"
 import { deepPurple, orange, deepOrange, lightGreen } from "@mui/material/colors"
+
 function Row(props) {
   const { row } = props
-  console.log(row)
 
   const discountColors = [
     { threshold: 80, color: deepPurple[500] },
@@ -29,10 +29,9 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell align="left">{row.sku}</TableCell>
         <TableCell align="center">
           <TableImage
-            alt={row.sku}
+            alt={row.itemName}
             src={row.productImage}
             height={50}
             width={50}
@@ -40,10 +39,10 @@ function Row(props) {
         </TableCell>
         <TableCell align="left">{row.itemName}</TableCell>
         <TableCell align="right">{row.quantity}</TableCell>
-        <TableCell align="right">{row.price.toLocaleString("vi-VN")} ₫</TableCell>
+        <TableCell align="right">{row.salePrice.toLocaleString("vi-VN")} ₫</TableCell>
         <TableCell
           align="right"
-          sx={{ color: getDiscoutColor((row.discountAmount / row.price) * 100) }}
+          sx={{ color: getDiscoutColor((row.discountAmount / row.salePrice) * 100) }}
         >
           {row.discountAmount.toLocaleString("vi-VN")} {row.discountAmount > 0 ? "₫" : ""}
         </TableCell>
@@ -72,7 +71,6 @@ export default function DetailsTable({ order }) {
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Mã sản phẩm</TableCell>
               <TableCell align="center">Ảnh</TableCell>
               <TableCell align="left">Tên sản phẩm</TableCell>
               <TableCell align="right">Số lượng</TableCell>
@@ -106,7 +104,7 @@ export default function DetailsTable({ order }) {
                     variant="h6"
                     color="#c92127"
                   >
-                    {order.totalAmount.toLocaleString("vi-VN")} VNĐ
+                    {order.totalPrice.toLocaleString("vi-VN")} VNĐ
                   </Typography>
                 </Stack>
               </TableCell>

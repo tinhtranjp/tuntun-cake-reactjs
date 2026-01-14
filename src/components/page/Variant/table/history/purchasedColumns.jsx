@@ -45,7 +45,7 @@ export const getPurchaseOrderColumns = ({ onSelectOrderId, handleNoteUpdate, onS
     },
   },
   {
-    field: "totalAmount",
+    field: "totalPrice",
     headerName: "Tổng tiền",
     type: "number",
     flex: 1,
@@ -110,6 +110,7 @@ export const getPurchaseOrderColumns = ({ onSelectOrderId, handleNoteUpdate, onS
                 variant="outlined"
                 size="small"
                 color="warning"
+                disabled={params?.row?.type !== "IMPORT"}
                 onClick={() => onSelectReturnId(params?.row?.id)}
               >
                 Trả hàng

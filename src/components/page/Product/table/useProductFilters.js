@@ -10,11 +10,10 @@ export function useProductFilters() {
   const page = searchParams.get("page") ?? "0"
   const limit = searchParams.get("limit") ?? "5"
   const sort = searchParams.get("sort") ?? "id-desc"
-  const status = searchParams.get("status") ?? "all"
-  const type = searchParams.get("type") ?? "all"
+  const status = searchParams.get("status") ?? "ALL"
+  const type = searchParams.get("type") ?? "ALL"
   const minPrice = searchParams.get("minPrice") ?? ""
   const maxPrice = searchParams.get("maxPrice") ?? ""
-  const variantDeleted = searchParams.get("variantDeleted") ?? "false"
 
   useEffect(() => {
     // Chỉ set default 1 lần nếu thiếu page hoặc limit
@@ -36,9 +35,8 @@ export function useProductFilters() {
       type,
       minPrice,
       maxPrice,
-      variantDeleted,
     }),
-    [page, limit, name, status, sort, type, minPrice, maxPrice, variantDeleted],
+    [page, limit, name, status, sort, type, minPrice, maxPrice],
   )
 
   return {
@@ -51,7 +49,6 @@ export function useProductFilters() {
     type,
     minPrice,
     maxPrice,
-    variantDeleted,
     setOrRemoveParam,
     updateParams,
   }

@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import CkeditorCustom from "@/components/ckeditor/CkeditorCustom"
 import TableImage from "@/components/table/TableImage"
 
-const EditableNoteModal = ({ open, onClose, note, onSave, itemId, itemSku, isRow = true, row }) => {
+const EditableNoteModal = ({ open, onClose, note, onSave, itemId, isRow = true, row }) => {
   const [content, setContent] = useState(note || "")
 
   useEffect(() => {
@@ -51,7 +51,6 @@ const EditableNoteModal = ({ open, onClose, note, onSave, itemId, itemSku, isRow
             >
               <TableImage
                 src={row.thumbnail}
-                alt={itemSku}
                 width={50}
                 height={50}
               />
@@ -66,7 +65,7 @@ const EditableNoteModal = ({ open, onClose, note, onSave, itemId, itemSku, isRow
                   color="text.secondary"
                   variant="body2"
                 >
-                  Sku: {itemSku}
+                  {row.code}
                 </Typography>
               </Box>
             </Stack>
@@ -87,7 +86,7 @@ const EditableNoteModal = ({ open, onClose, note, onSave, itemId, itemSku, isRow
         <CkeditorCustom
           scrollable
           height="250px"
-          folder="purchase-import"
+          folder="purchase-import/note"
           onChange={(value) => setContent(value)}
           value={content}
           label="Ghi chú"

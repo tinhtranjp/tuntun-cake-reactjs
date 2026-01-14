@@ -7,11 +7,7 @@ function AddCategory() {
   const createMutation = useCategoryCreate()
 
   const handleSubmit = async (payload) => {
-    try {
-      await createMutation.mutateAsync(payload)
-    } catch (error) {
-      console.log(error)
-    }
+    await createMutation.mutateAsync(payload)
   }
   return (
     <Box sx={{ maxWidth: "600px", margin: "0 auto" }}>

@@ -7,14 +7,11 @@ export function useImportFilters() {
   const { updateParams, setOrRemoveParam } = useSearchParamsFilters()
 
   const name = searchParams.get("name") ?? ""
-  const sku = searchParams.get("sku") ?? ""
-  const flavor = searchParams.get("flavor") ?? ""
   const page = searchParams.get("page") ?? "0"
   const limit = searchParams.get("limit") ?? "5"
   const sort = searchParams.get("sort") ?? "id-desc"
-  const type = searchParams.get("type") ?? "all"
-  const minPrice = searchParams.get("minPrice") ?? ""
-  const maxPrice = searchParams.get("maxPrice") ?? ""
+  const type = searchParams.get("type") ?? "ALL"
+  const status = searchParams.get("status") ?? "ALL"
 
   useEffect(() => {
     // Chỉ set default 1 lần nếu thiếu page hoặc limit
@@ -31,14 +28,11 @@ export function useImportFilters() {
       page,
       limit,
       name,
-      sku,
-      flavor,
       sort,
       type,
-      minPrice,
-      maxPrice,
+      status,
     }),
-    [page, limit, name, sku, flavor, sort, type, minPrice, maxPrice],
+    [page, limit, status, name, sort, type],
   )
 
   return {
@@ -46,12 +40,8 @@ export function useImportFilters() {
     pageNumber,
     limitNumber,
     name,
-    sku,
-    flavor,
     sort,
     type,
-    minPrice,
-    maxPrice,
     setOrRemoveParam,
     updateParams,
   }

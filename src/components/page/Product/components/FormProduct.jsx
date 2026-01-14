@@ -1,6 +1,6 @@
 import { useCategoryGetAll } from "@/service/category/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useFieldArray, useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { productSchema } from "./schema"
 import { Box, Button, FormHelperText, Grid } from "@mui/material"
 import TextFieldCustom from "@/components/input-common/TextFieldCustom"
@@ -8,11 +8,9 @@ import AutocompleteRHF from "@/components/input-common/AutocompleteRHF"
 import { mappedStringToObj } from "@/helper/product"
 import { useProductGetStatus, useProductGetType } from "@/service/product/queries"
 import CkeditorCustom from "@/components/ckeditor/CkeditorCustom"
-import { useEffect } from "react"
-import { ProductVariantField } from "./ProductVariantField"
 import ImageDnd from "@/components/dnd/img/ImageDnd"
 
-function FormProduct({ onSubmit, type = "self_made" }) {
+function FormProduct({ onSubmit }) {
   const { data: categories } = useCategoryGetAll()
   const { data: status } = useProductGetStatus()
   const { data: types } = useProductGetType()
@@ -21,39 +19,16 @@ function FormProduct({ onSubmit, type = "self_made" }) {
     handleSubmit,
     control,
     setValue,
-    trigger,
     formState: { isSubmitting, errors },
   } = useForm({
     defaultValues: {
       name: "",
-      variants: [],
       basePrice: 0,
       categoryIds: [],
     },
     mode: "onSubmit",
     resolver: zodResolver(productSchema),
   })
-
-  const { fields, append, remove } = useFieldArray({
-    name: "variants",
-    control,
-  })
-
-  const appendVariant = () => {
-    append({
-      variantName: "",
-      stockQuantity: 0,
-      price: 0,
-      images: [],
-    })
-  }
-
-  useEffect(() => {
-    if (errors?.variants?.message && fields.length === 0) {
-      // Tự động append variant khi có lỗi và chưa có variant nào
-      appendVariant()
-    }
-  }, [errors?.variants?.message, fields.length])
 
   const onFormSubmit = async (data) => {
     await onSubmit?.(data)
@@ -120,7 +95,7 @@ function FormProduct({ onSubmit, type = "self_made" }) {
             control={control}
             render={({ field, fieldState }) => (
               <CkeditorCustom
-                folder="product"
+                folder="product/desc"
                 onChange={(value) => field.onChange(value)}
                 label="Mô tả"
                 messError={fieldState?.error?.message}
@@ -129,31 +104,6 @@ function FormProduct({ onSubmit, type = "self_made" }) {
           />
         </Grid>
       </Grid>
-      <Box>
-        {fields.map((field, index) => (
-          <div key={field.id}>
-            <ProductVariantField
-              type={type}
-              trigger={trigger}
-              index={index}
-              control={control}
-              setValue={setValue}
-              errors={errors}
-              remove={remove}
-            />
-          </div>
-        ))}
-      </Box>
-      <Button
-        type="button"
-        variant="contained"
-        size="sm"
-        onClick={appendVariant}
-        sx={{ mt: 4 }}
-      >
-        Thêm sản phẩm con
-      </Button>
-
       <Box>
         <Button
           type="submit"

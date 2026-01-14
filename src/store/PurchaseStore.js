@@ -11,11 +11,12 @@ export const usePurchaseStore = create(
         addItemToType: (type, item) => {
           set((state) => {
             const purchase = state.purchases.find((p) => p.type === type)
-            if (purchase) {
-              let existingItem = purchase.items.find((i) => i.itemId === item.itemId)
 
-              if (existingItem) {
-                existingItem = { ...item }
+            if (purchase) {
+              const index = purchase.items.findIndex((i) => i.itemId === item.itemId)
+
+              if (index !== -1) {
+                purchase.items[index] = item // ✅ overwrite
               } else {
                 purchase.items.push(item)
               }
@@ -36,7 +37,6 @@ export const usePurchaseStore = create(
             }
           })
         },
-
         updateNoteInType: (type, note) => {
           set((state) => {
             let purchase = state.purchases.find((p) => p.type === type)
@@ -47,7 +47,6 @@ export const usePurchaseStore = create(
             purchase.note = note
           })
         },
-
         deleteItemsInType: (type, itemIds) => {
           set((state) => {
             const purchase = state.purchases.find((p) => p.type === type)

@@ -2,18 +2,20 @@ import { useAddItemToOrder } from "@/store/OrderStore"
 import { Box, Card, Chip, Stack, Typography } from "@mui/material"
 import { v4 as uuidv4 } from "uuid"
 
-function VariantItem({ variant, productName, imgUrl, onClose, length }) {
+function VariantItem({ variant, onClose, currentProduct }) {
+  const length = currentProduct?.pvDetails?.length
+
   const addItemToOrder = useAddItemToOrder()
+
   const handleAddToOrder = () => {
     const orderDetail = {
       id: uuidv4(),
       itemId: variant.id,
-      itemName: productName,
-      productImage: imgUrl,
-      size: variant.variantName,
-      sku: variant.sku,
+      itemName: currentProduct?.name,
+      productImage: currentProduct?.images[0]?.url,
       quantity: 1,
-      price: variant.price,
+      price: variant.salePrice,
+      size: variant?.poDetails?.map((po) => po.povDetails[0]?.value).join(" x "),
       discountAmount: 0,
       discountPercent: 0,
       note: "",
@@ -26,11 +28,10 @@ function VariantItem({ variant, productName, imgUrl, onClose, length }) {
     <Card
       onClick={handleAddToOrder}
       sx={{
-        height: "100%",
         display: "flex",
         flexDirection: "column",
         cursor: "pointer",
-        maxWidth: length == 1 ? "300px" : "216px",
+        width: length == 1 ? "300px" : "220px",
         "&:hover": {
           opacity: [0.9],
           transition: "box-shadow 0.2s",
@@ -40,8 +41,7 @@ function VariantItem({ variant, productName, imgUrl, onClose, length }) {
     >
       <Box
         component="img"
-        src={imgUrl}
-        alt={variant.variantName}
+        src={variant?.images[0]?.url || currentProduct?.images[0]?.url}
         onError={(e) => {
           e.currentTarget.onerror = null
           e.currentTarget.src = "/no_image.jpeg"
@@ -54,24 +54,32 @@ function VariantItem({ variant, productName, imgUrl, onClose, length }) {
       />
       <Stack sx={{ p: 1, justifyContent: "space-between", flexGrow: 1 }}>
         <Typography
-          mt={1}
-          variant="body2"
+          my={1}
+          variant="body1"
+          color="#333"
         >
-          ( {variant.variantName} ) {productName}
+          {currentProduct?.name}
         </Typography>
         <Stack
-          flexDirection={"row"}
-          justifyContent="space-between"
-          alignItems="center"
-          mt={2}
+          direction={"row"}
+          flexWrap={"wrap"}
+          gap={1}
         >
-          <Typography textAlign={"end"}>{variant.price.toLocaleString("vi-VN")} ₫</Typography>{" "}
-          <Chip
-            label={variant.variantName}
-            color="primary"
-            size="small"
-          />
+          {variant?.poDetails?.map((po) => (
+            <Chip
+              key={po.id}
+              label={po.povDetails[0]?.value}
+              color="primary"
+              size="small"
+            />
+          ))}
         </Stack>
+        <Typography
+          mt={2}
+          textAlign={"end"}
+        >
+          {variant.salePrice.toLocaleString("vi-VN")} ₫
+        </Typography>{" "}
       </Stack>
     </Card>
   )

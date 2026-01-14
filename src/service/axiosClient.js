@@ -4,7 +4,8 @@ import { getUser, setUser, clearUser } from "@store/UserStore"
 import { userApi } from "@service/userApi"
 
 export const axiosClient = axios.create({
-  baseURL: "http://localhost:8080/api/v1/",
+  // baseURL: "http://localhost:8081/cake-api/v1/",
+  baseURL: "https://tuntundb.asia/cake-api/cake-api/v1/",
   headers: {
     "Content-Type": "application/json",
   },

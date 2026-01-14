@@ -3,12 +3,11 @@ import NoteCell from "../components/NoteCell"
 import TableImage from "@/components/table/TableImage"
 
 export const getPurchaseReturnColummns = ({ handleDeleteRow, handleNoteUpdate }) => [
-  { field: "itemId", headerName: "ID", flex: 0.5, editable: false },
-  { field: "itemName", headerName: "Tên sản phẩm", flex: 1, editable: false },
-  { field: "sku", headerName: "Mã sản phẩm", flex: 1, editable: false },
+  { field: "id", headerName: "ID", flex: 0.5, editable: false },
+  { field: "productName", headerName: "Tên sản phẩm", flex: 1, editable: false },
   // { field: "thumbnail", headerName: "Ảnh", flex: 0.5, editable: false },
   {
-    field: "productImage",
+    field: "imgUrl",
     headerName: "Ảnh",
     sortable: false,
     flex: 1,
@@ -26,7 +25,6 @@ export const getPurchaseReturnColummns = ({ handleDeleteRow, handleNoteUpdate })
         }}
       >
         <TableImage
-          alt={params.row.sku}
           src={params.value}
           height={40}
           width={40}
@@ -34,12 +32,13 @@ export const getPurchaseReturnColummns = ({ handleDeleteRow, handleNoteUpdate })
       </Box>
     ),
   },
-  { field: "unit", headerName: "Đơn vị", flex: 0.5, editable: false },
-  { field: "costPrice", headerName: "Giá nhập", type: "number", flex: 1, editable: false },
-  { field: "basePrice", headerName: "Giá bán", type: "number", flex: 1, editable: false },
+  { field: "costPrice", headerName: "Giá nhập", type: "number", flex: 1, editable: true },
+  { field: "originalPrice", headerName: "Giá niêm yết", type: "number", flex: 1, editable: true },
+  { field: "salePrice", headerName: "Giá bán", type: "number", flex: 1, editable: true },
   { field: "quantity", headerName: "Số lượng", type: "number", flex: 1, editable: true },
   { field: "discountPercent", headerName: "% KM", type: "number", flex: 1, editable: false },
   { field: "discountAmount", headerName: "(amount) KM", type: "number", flex: 1, editable: false },
+  { field: "totalPrice", headerName: "Giá bán", type: "number", flex: 1, editable: false },
   {
     field: "note",
     headerName: "Ghi chú",
@@ -67,7 +66,7 @@ export const getPurchaseReturnColummns = ({ handleDeleteRow, handleNoteUpdate })
       <Box>
         <Button
           color="error"
-          onClick={() => handleDeleteRow(params.row.itemId)}
+          onClick={() => handleDeleteRow(params.row.variantId)}
         >
           Xoá
         </Button>

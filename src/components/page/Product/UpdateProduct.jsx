@@ -10,8 +10,6 @@ function UpdateProduct() {
   const updateMutation = useProductUpdate()
 
   const handleSubmit = async (data) => {
-    console.log(data)
-
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("description", data.description)
@@ -28,22 +26,6 @@ function UpdateProduct() {
         formData.append(`images[${iIndex}].id`, image.id)
         formData.append(`images[${iIndex}].url`, image.url)
       }
-    })
-
-    data.variants.forEach((variant, vIndex) => {
-      formData.append(`variants[${vIndex}].variantName`, variant.variantName)
-      formData.append(`variants[${vIndex}].isDefault`, variant.isDefault)
-
-      variant.images.forEach((image, iIndex) => {
-        if (image.file) {
-          // ✅ File mới - gửi file
-          formData.append(`variants[${vIndex}].images[${iIndex}].file`, image.file)
-        } else if (image.id) {
-          // ✅ Ảnh cũ - chỉ gửi id
-          formData.append(`variants[${vIndex}].images[${iIndex}].id`, image.id)
-          formData.append(`variants[${vIndex}].images[${iIndex}].url`, image.url)
-        }
-      })
     })
 
     try {

@@ -13,6 +13,7 @@ export default function PurchaseList() {
   const [searchParams] = useSearchParams()
 
   const type = searchParams.get("p_type")
+
   React.useEffect(() => {
     if (type) {
       setValue("4")

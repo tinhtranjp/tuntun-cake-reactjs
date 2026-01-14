@@ -16,40 +16,32 @@ import {
   TablePagination,
 } from "@mui/material"
 import * as React from "react"
-import TextInput from "@/components/input-common/TextInput"
-import { useVariantSearch } from "@/service/variant/queries"
 import ImportRow from "./ImportRow"
 import { headCells } from "../helper/importHeaderCells"
 import ImportView from "./ImportView"
-import RangePrice from "@/components/table/RangePrice"
 import { useImportFilters } from "../helper/useImportFilters"
+import { usePVSearch } from "@/service/product-variant/queries"
 
 export default function ImportTable() {
   const [order, setOrder] = React.useState("asc")
   const [orderBy, setOrderBy] = React.useState("id")
   const [selected, setSelected] = React.useState([])
+
   const [modal, setModal] = React.useState({
     open: false,
     row: null,
     type: null,
   })
 
-  const { filters, pageNumber, limitNumber, name, sku, type, minPrice, maxPrice, updateParams, setOrRemoveParam } =
-    useImportFilters()
+  const { filters, pageNumber, limitNumber, name, type, status, updateParams, setOrRemoveParam } = useImportFilters()
 
-  const { data } = useVariantSearch(filters)
+  const { data } = usePVSearch(filters)
 
   const handleChangePage = (event, newPage) => updateParams({ page: newPage })
   const handleChangeRowsPerPage = (event) => updateParams({ page: 0, limit: parseInt(event.target.value, 10) })
   const handleChangeName = (name) => updateParams({ name })
-  const handleChangeSku = (sku) => updateParams({ sku })
   const handleChangeType = (e) => setOrRemoveParam("type", e.target.value)
-  const handleChangeMin = (value) => {
-    setOrRemoveParam("minPrice", value.toString())
-  }
-  const handleChangeMax = (value) => {
-    setOrRemoveParam("maxPrice", value.toString())
-  }
+  const handleChangeStatus = (e) => setOrRemoveParam("status", e.target.value)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -118,19 +110,25 @@ export default function ImportTable() {
           flexDirection="row"
           gap={2}
         >
-          <TextInput
-            onChangeValue={handleChangeSku}
-            value={sku}
-            size={"small"}
-            label={"SKU"}
-            paddingYCustom="8px"
-          />
-          <RangePrice
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            handleChangeMin={handleChangeMin}
-            handleChangeMax={handleChangeMax}
-          />
+          <FormControl
+            sx={{ width: 180 }}
+            size="small"
+          >
+            <InputLabel id="status">Status</InputLabel>
+            <Select
+              labelId="status"
+              id="demo-simple-status"
+              value={status}
+              label="status"
+              onChange={handleChangeStatus}
+            >
+              <MenuItem value="ALL">Tất cả</MenuItem>
+              <MenuItem value="ACTIVE">ACTIVE</MenuItem>
+              <MenuItem value="INACTIVE">Ngừng bán</MenuItem>
+              <MenuItem value="OUT_OF_STOCK">Hết hàng</MenuItem>
+              <MenuItem value="DISCONTINUED">Ngừng sản xuất</MenuItem>
+            </Select>
+          </FormControl>
           <FormControl
             sx={{ width: 180 }}
             size="small"
@@ -143,10 +141,10 @@ export default function ImportTable() {
               label="Type"
               onChange={handleChangeType}
             >
-              <MenuItem value="all">Tất cả</MenuItem>
-              <MenuItem value="imported">IMPORTED</MenuItem>
-              <MenuItem value="self_made">SELF_MADE</MenuItem>
-              <MenuItem value="raw_material">RAW_MATERIAL</MenuItem>
+              <MenuItem value="ALL">Tất cả</MenuItem>
+              <MenuItem value="IMPORTED">Hàng nhập</MenuItem>
+              <MenuItem value="SELF_MADE">Tự làm</MenuItem>
+              <MenuItem value="RAW_MATERIAL">Nguyên liệu</MenuItem>
             </Select>
           </FormControl>
         </Stack>

@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { orderApi } from "./orderApi"
 import { OrderKey } from "./queries"
+import { handleApiError } from "@/helper/api"
+import { toast } from "sonner"
 
 export function useOrderCreate() {
   return useMutation({
@@ -10,6 +12,24 @@ export function useOrderCreate() {
 
     onError: (error) => {
       toast.error(error.response?.data?.message || error.message)
+    },
+  })
+}
+
+export function useOrderUpdateNote() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, data }) => orderApi.updateNote(id, data),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [OrderKey.SEARCH] })
+      queryClient.invalidateQueries({ queryKey: [OrderKey.STATUS_COUNTS] })
+      toast.success("Cập nhật thành công.")
+    },
+
+    onError: (error) => {
+      handleApiError(error)
     },
   })
 }

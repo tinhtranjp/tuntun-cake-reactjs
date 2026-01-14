@@ -21,6 +21,11 @@ import {
   Analytic,
   Sale,
   ReoderCate,
+  AddVariant,
+  UpdateVariant,
+  Option,
+  OptionValue,
+  VariantReorder,
 } from "@components/page"
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -29,10 +34,12 @@ import "@fontsource/roboto/700.css"
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { BrowserRouter, Route, Routes } from "react-router"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
 import Navbar from "./components/layout/Navbar"
 import { Pushchased } from "./components/page"
+import { useUserStore } from "./store/UserStore"
+
 const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, "Helvetica", "Arial", sans-serif',
@@ -40,6 +47,16 @@ const theme = createTheme({
 })
 const queryClient = new QueryClient()
 function App() {
+  const user = useUserStore()
+
+  // Nếu chưa login thì redirect về login
+  if (!user)
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    )
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
@@ -61,11 +78,10 @@ function App() {
                 element={<Sale />}
               />
               {/* ----------- dashboard end ---------- */}
-
               {/* ----------- category start ---------- */}
               <Route
                 path="/"
-                element={<Home />}
+                element={<OverView />}
               />
               <Route
                 path="/category/add"
@@ -80,9 +96,18 @@ function App() {
                 element={<ReoderCate />}
               />
               {/* ----------- category end ---------- */}
+              {/* ----------- option start ---------- */}
+              <Route
+                path="/options-list"
+                element={<Option />}
+              />
+              <Route
+                path="/options/value/:id"
+                element={<OptionValue />}
+              />
 
+              {/* ----------- option end ---------- */}
               {/* ----------- recipe start ---------- */}
-
               <Route
                 path="/recipe-list"
                 element={<Recipe />}
@@ -100,24 +125,19 @@ function App() {
                 element={<ReoderCategory />}
               />
               {/* ----------- recipe end ---------- */}
-
               {/* ----------- product start ---------- */}
-
               <Route
                 path="/product-list"
                 element={<Product />}
               />
-
               <Route
                 path="/product/add"
                 element={<AddProduct />}
               />
-
               <Route
                 path="/product/:id/update"
                 element={<UpdateProduct />}
               />
-
               <Route
                 path="/product/purchase"
                 element={<Import />}
@@ -130,15 +150,27 @@ function App() {
                 path="/product/purchase/order"
                 element={<Pushchased />}
               />
-
               {/* ----------- product end ---------- */}
+              {/* ----------- variant start ---------- */}
+              <Route
+                path="/variant/:id/add"
+                element={<AddVariant />}
+              />
+              <Route
+                path="/variant/:id/update"
+                element={<UpdateVariant />}
+              />
 
+              <Route
+                path="/variant/reorder/:id"
+                element={<VariantReorder />}
+              />
+              {/* ----------- variant end ---------- */}
               {/* ----------- order start ---------- */}
               <Route
                 path="/order-list"
                 element={<Order />}
               />
-
               <Route
                 path="/order-history"
                 element={<OrderHistory />}

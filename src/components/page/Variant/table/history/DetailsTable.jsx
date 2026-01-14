@@ -48,11 +48,10 @@ function Row(props) {
             {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="left">{row.sku}</TableCell>
         <TableCell align="center">
           <TableImage
-            alt={row.sku}
-            src={row.productImage}
+            alt={row.productName}
+            src={row.imgUrl}
             height={50}
             width={50}
           />
@@ -61,14 +60,14 @@ function Row(props) {
           align="left"
           sx={{ maxWidth: 200 }}
         >
-          {row.itemName}
+          {row.productName}
         </TableCell>
-        <TableCell align="left">{row.unit}</TableCell>
         <TableCell align="right">
           {type === "adjustment" && row.quantity > 0 ? `+${row.quantity}` : row.quantity}
         </TableCell>
         <TableCell align="right">{row.costPrice.toLocaleString("vi-VN")} ₫</TableCell>
-        <TableCell align="right">{row.basePrice.toLocaleString("vi-VN")} ₫</TableCell>
+        <TableCell align="right">{row.originalPrice.toLocaleString("vi-VN")} ₫</TableCell>
+        <TableCell align="right">{row.salePrice.toLocaleString("vi-VN")} ₫</TableCell>
         <TableCell align="right">{row.totalPrice.toLocaleString("vi-VN")} ₫</TableCell>
       </TableRow>
       <TableRow>
@@ -85,7 +84,7 @@ function Row(props) {
               {update ? (
                 <>
                   <CkeditorCustom
-                    folder="purchase-history"
+                    folder="purchase-history/note"
                     onChange={(value) => setContent(value)}
                     value={content}
                     label=""
@@ -148,12 +147,11 @@ export default function DetailsTable({ order }) {
           <TableHead>
             <TableRow>
               <TableCell align="left">Ghi chú</TableCell>
-              <TableCell align="left">Mã sản phẩm</TableCell>
               <TableCell align="center">Ảnh</TableCell>
               <TableCell align="left">Tên sản phẩm</TableCell>
-              <TableCell align="left">Đơn vị</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Giá Nhập</TableCell>
+              <TableCell align="right">Giá Niêm yết</TableCell>
               <TableCell align="right">Giá Bán</TableCell>
               <TableCell align="right">Tổng tiền</TableCell>
             </TableRow>
@@ -182,7 +180,7 @@ export default function DetailsTable({ order }) {
                     variant="h6"
                     color="#c92127"
                   >
-                    {order.totalAmount.toLocaleString("vi-VN")} VNĐ
+                    {order.totalPrice.toLocaleString("vi-VN")} VNĐ
                   </Typography>
                 </Stack>
               </TableCell>

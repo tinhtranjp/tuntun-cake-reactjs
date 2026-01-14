@@ -4,14 +4,12 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material"
 import BorderColorIcon from "@mui/icons-material/BorderColor"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router"
+import { useNavigate } from "react-router"
 import { useCategoryReorder, useCategoryToggle } from "@/service/category/mutation"
 function ReorderCate() {
   const [items, setItems] = useState([])
   const { data } = useCategoryGetAll()
   const navigate = useNavigate()
-
-  console.log(data)
 
   useEffect(() => {
     if (data) {
@@ -23,11 +21,7 @@ function ReorderCate() {
   const toggleMutation = useCategoryToggle()
 
   const handleDeleteCategory = async (id) => {
-    try {
-      await toggleMutation.mutateAsync(id)
-    } catch (error) {
-      console.log(error)
-    }
+    await toggleMutation.mutateAsync(id)
   }
 
   const handleReorder = async () => {
@@ -69,7 +63,7 @@ function ReorderCate() {
                     sx={{ color: item.isDeleted ? "#777" : "" }}
                   >
                     {index + 1}. {item.name} {item.isDeleted ? "(Đã xóa)" : ""}
-                  </Typography>
+                  </Typography>{" "}
                   <IconButton
                     onClick={() => goToUpdatePage(item.id)}
                     sx={{ position: "absolute", top: "12px", right: 100 }}

@@ -4,13 +4,17 @@ import InfoIcon from "@mui/icons-material/Info"
 import { useState } from "react"
 import EditableNoteModal from "./EditableNoteModal"
 
-const NoteCell = ({ value, row, onUpdate }) => {
+const NoteCell = ({ value, row, onUpdate, onUpdateNoteOrder }) => {
   const [openModal, setOpenModal] = useState(false)
   const hasNote = value && value.trim() !== ""
 
   const handleSave = (newNote) => {
     if (onUpdate) {
       onUpdate(row.itemId, newNote)
+    }
+
+    if (onUpdateNoteOrder) {
+      onUpdateNoteOrder(row.id, newNote)
     }
   }
 

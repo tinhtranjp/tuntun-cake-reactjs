@@ -18,6 +18,7 @@ function Pushchased() {
   const [selectedOrderId, setSelectedOrderId] = useState(null)
   const [openModalDetails, setModalDetails] = useState(false)
   const { updateParams, setOrRemoveParam } = useSearchParamsFilters()
+
   const {
     filters,
     page,
@@ -114,6 +115,7 @@ function Pushchased() {
   }
 
   const mutationUpdateNote = usePurchaseUpdateNote()
+
   const handleNoteDetailUpdate = async (itemId, newNote) => {
     try {
       await mutationUpdateNote.mutateAsync({ id: itemId, data: { note: newNote } })
@@ -137,6 +139,7 @@ function Pushchased() {
     handleNoteUpdate: handleNoteDetailUpdate,
     onSelectReturnId: handeSelectReturnId,
   })
+
   return (
     <Box sx={{ py: 2 }}>
       <Box sx={{ position: "relative", display: "flex", flexDirection: "column", height: "84vh", width: "100%" }}>

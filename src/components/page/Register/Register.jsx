@@ -9,12 +9,8 @@ function Register() {
   const register = useCreateUser()
 
   const handleRegisterUser = async (user) => {
-    try {
-      await register.mutateAsync(user)
-      navigate("/login")
-    } catch (error) {
-      console.log(error.message)
-    }
+    await register.mutateAsync(user)
+    navigate("/login")
   }
   return (
     <Container

@@ -1,11 +1,10 @@
 // purchaseImportColumns.js
-import { Box, Stack } from "@mui/material"
-import dayjs from "dayjs"
-import RenderStatus from "./RenderStatus"
+import { Box } from "@mui/material"
 import RenderOrdersDetail from "./RenderOrdersDetail"
-import RenderPreOrder from "./RenderPreOrder"
+import { formatUtcToLocal } from "@/helper/common"
+import NoteCell from "../../Variant/components/NoteCell"
 
-export const getPurchaseImportColumns = ({ onSelectOrderId }) => [
+export const getPurchaseImportColumns = ({ onSelectOrderId, onUpdateNote }) => [
   { field: "id", headerName: "ID", flex: 0.5, editable: false },
   { field: "code", headerName: "Mã order", flex: 1, sortable: false, editable: false },
   {
@@ -14,60 +13,33 @@ export const getPurchaseImportColumns = ({ onSelectOrderId }) => [
     flex: 1,
     renderCell: (params) => {
       if (!params.value) return ""
-      const date = dayjs(params.value.replace(" ", "T"))
-      return (
-        <span className="text-gray-700 font-medium">
-          {date.isValid() ? date.format("DD-MM-YYYY HH:mm:ss") : params.value}
-        </span>
-      )
+      return <span className="text-gray-700 font-medium">{formatUtcToLocal(params.value)}</span>
     },
   },
   {
-    field: "preOrderFlag",
-    headerName: "Pre order",
-    headerAlign: "center",
-    flex: 0.5,
-    renderCell: (params) => {
-      const isPreOrder = Boolean(params.value)
-      return (
-        <Stack
-          width="100%"
-          height="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <RenderPreOrder
-            isPreOrder={isPreOrder}
-            id={params.row.id}
-          />
-        </Stack>
-      )
-    },
-  },
-  {
-    field: "status",
+    field: "type",
     headerName: "Trạng thái",
     flex: 0.7,
+  },
+  {
+    field: "note",
+    headerName: "Ghi chú",
+    sortable: false,
+    flex: 0.5,
+    align: "center",
+    headerAlign: "center",
     renderCell: (params) => {
-      if (!params.value) return ""
-      const status = params.value.toUpperCase()
       return (
-        <Stack
-          width="100%"
-          height="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <RenderStatus
-            status={status}
-            id={params.row.id}
-          />
-        </Stack>
+        <NoteCell
+          value={params?.row?.note}
+          row={params.row}
+          onUpdateNoteOrder={onUpdateNote}
+        />
       )
     },
   },
   {
-    field: "totalAmount",
+    field: "totalPrice",
     headerName: "Tổng tiền",
     type: "number",
     flex: 1,

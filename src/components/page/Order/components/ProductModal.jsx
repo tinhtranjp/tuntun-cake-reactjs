@@ -5,26 +5,14 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "auto",
-  maxWidth: "90vw",
-  minWidth: "450px",
   bgcolor: "background.paper",
   borderRadius: 3,
   boxShadow: 24,
-  border: "none", // Thêm dòng này
-  outline: "none", // Thêm dòng này để chắc chắn
+  border: "none",
+  outline: "none",
   p: 3,
 }
-
-export default function ProductModal({
-  open,
-  onClose,
-  title,
-  children,
-  maxWidth = "90vw",
-  minWidth = "450px",
-  ...props
-}) {
+export default function ProductModal({ open, onClose, title, children, minWidth, maxWidth, ...props }) {
   return (
     <Modal
       open={open}
@@ -32,7 +20,7 @@ export default function ProductModal({
       aria-labelledby="product-modal-title"
       aria-describedby="product-modal-description"
     >
-      <Box sx={{ ...style, maxWidth, minWidth }}>
+      <Box sx={{ ...style, minWidth, maxWidth, width: "auto" }}>
         <Box>
           <Box
             display="flex"
@@ -48,7 +36,6 @@ export default function ProductModal({
             >
               {title || "Chi tiết sản phẩm"}
             </Typography>
-
             <IconButton
               size="small"
               onClick={onClose}

@@ -3,28 +3,27 @@ import { Box, Card, Stack } from "@mui/material"
 import NavOrder from "./components/NavOrder"
 import ProductList from "./components/ProductList"
 import TotalOrder from "./components/OrderTotal"
+import useSearchParamsFilters from "@/hook/useSearchParamsFilters"
 
 function Order() {
-  const handleSearchChange = (value) => {
-    console.log("Search value:", value)
-  }
+  const { updateParams, searchParams } = useSearchParamsFilters()
+  const name = searchParams.get("name") ?? ""
+  const handleChangeSearch = (name) => updateParams({ name })
+
   return (
     <Stack
       flexDirection={"row"}
       gap={4}
     >
-      <Box
-        mt={2}
-        flex={1}
-      >
-        <SearchInput
-          onChangeValue={handleSearchChange}
-          paddingYCustom="10px"
-        />
-        <NavOrder
-          mt={2}
-          mb={5}
-        />
+      <Box flex={1}>
+        <Box mt={1}>
+          <SearchInput
+            onChangeValue={handleChangeSearch}
+            paddingYCustom={"10px"}
+            value={name}
+          />
+        </Box>
+        <NavOrder my={3} />
         <ProductList />
       </Box>
       <Card

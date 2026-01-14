@@ -10,12 +10,13 @@ function ProductList() {
   const [open, setOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
   const [searchParams] = useSearchParams()
-  const keyword = searchParams.get("keyword") ?? ""
-  const categoryIds = searchParams.get("categoryIds")
+
+  const name = searchParams.get("name") ?? ""
+  const categoryId = searchParams.get("categoryId")
 
   const { data, isLoading } = useProductSearchOrders({
-    keyword,
-    categoryIds,
+    name,
+    categoryId,
   })
 
   const handleOpenModal = (productId) => {
@@ -24,8 +25,11 @@ function ProductList() {
   }
 
   const currentProduct = data?.find((product) => product.id === selectedId)
-  if (isLoading) return <Box>Loading...</Box>
 
+  const currentLength = currentProduct?.variants?.length ?? 0
+
+  if (isLoading) return <Box>Loading...</Box>
+  const minWidth = currentLength < 2 ? "300px" : currentLength < 5 ? "450px" : "1100px"
   return (
     <Grid
       container
@@ -35,7 +39,7 @@ function ProductList() {
       {data &&
         data.map((product) => (
           <Grid
-            size={2}
+            size={3}
             key={product.id}
             onClick={() => handleOpenModal(product.id)}
           >
@@ -46,25 +50,34 @@ function ProductList() {
         open={open}
         onClose={() => setOpen(false)}
         title="Thông tin sản phẩm"
-        minWidth={currentProduct?.variants?.length == 1 ? "300px" : "450px"}
-        maxWidth={currentProduct?.variants?.length == 1 ? "300px" : "90vw"}
+        minWidth={minWidth}
+        maxWidth="90vw"
       >
-        <Stack
-          flexDirection={"row"}
-          gap={2}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "70vh",
+            overflowY: "auto",
+            pr: 2,
+          }}
         >
-          {currentProduct &&
-            currentProduct.variants.map((v) => (
-              <VariantItem
-                length={currentProduct?.variants?.length}
-                imgUrl={currentProduct?.images[0]?.url}
-                productName={currentProduct?.name}
-                variant={v}
-                key={v.id}
-                onClose={() => setOpen(false)}
-              />
-            ))}{" "}
-        </Stack>
+          <Stack
+            flexDirection={"row"}
+            gap={2}
+            sx={{ flexWrap: "wrap", pb: 4 }}
+          >
+            {currentProduct &&
+              currentProduct.pvDetails.map((v) => (
+                <VariantItem
+                  currentProduct={currentProduct}
+                  variant={v}
+                  key={v.id}
+                  onClose={() => setOpen(false)}
+                />
+              ))}{" "}
+          </Stack>
+        </Box>
       </ProductModal>
     </Grid>
   )

@@ -9,12 +9,8 @@ function UpdateCategory() {
   const { id } = useParams()
 
   const handleSubmit = async (payload) => {
-    try {
-      await updateMutation.mutateAsync({ id, data: payload })
-      navigate("/category/reoder")
-    } catch (error) {
-      console.log(error)
-    }
+    await updateMutation.mutateAsync({ id, data: payload })
+    navigate("/category/reoder")
   }
   return (
     <Box sx={{ maxWidth: "600px", margin: "0 auto" }}>

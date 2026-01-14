@@ -1,14 +1,15 @@
+import TableImage from "@/components/table/TableImage"
 import TabContext from "@mui/lab/TabContext"
 import TabList from "@mui/lab/TabList"
 import TabPanel from "@mui/lab/TabPanel"
-import { Box, Chip, Modal, Stack, Typography } from "@mui/material"
+import { Box, Modal, Stack, Typography } from "@mui/material"
 import Tab from "@mui/material/Tab"
 import React, { useEffect } from "react"
-import ImportContent from "./ImportContent"
 import AdjustmentContent from "./AdjustmentContent"
+import ImportContent from "./ImportContent"
 import UpdateContent from "./UpdateContent"
-import TableImage from "@/components/table/TableImage"
 import ViewDetail from "./ViewDetail"
+import { getValue } from "@/helper/product"
 
 const styleModal = {
   position: "absolute",
@@ -74,30 +75,21 @@ function ImportView({ modal, onClose, row }) {
                     height={50}
                     width={50}
                   />
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h6"
-                    component="h2"
-                  >
-                    {row.name}
-                  </Typography>
-                </Stack>
-                <Stack
-                  spacing={2}
-                  mb={2}
-                  mt={1}
-                >
-                  <Stack
-                    flexDirection="row"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Mã sản phẩm : </Typography>
-                    <Chip
-                      label={row.sku}
-                      color="primary"
-                    />
-                  </Stack>
+                  <Box>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h6"
+                      component="h2"
+                    >
+                      {row.productName}
+                    </Typography>
+                    {row.poDetails?.map((po) => (
+                      <Box key={po.id}>
+                        {po?.name} : {po?.povDetails[0]?.value}
+                      </Box>
+                    ))}
+                    <Typography>{getValue(row.productType)}</Typography>
+                  </Box>
                 </Stack>
               </Box>
               <TabContext value={value}>
@@ -150,7 +142,6 @@ function ImportView({ modal, onClose, row }) {
             >
               {row.images?.map((i) => (
                 <TableImage
-                  alt={row.sku + i.orderBy}
                   src={i.url}
                   key={i.id}
                 />

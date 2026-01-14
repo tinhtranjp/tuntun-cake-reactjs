@@ -4,7 +4,6 @@ import TableToolbarCustom from "@/components/table/TableToolbarCustom"
 import { useProductSearch } from "@/service/product/queries"
 
 import RangePrice from "@/components/table/RangePrice"
-import { useVariantToggle } from "@/service/variant/mutation"
 import {
   Box,
   FormControl,
@@ -34,22 +33,10 @@ export default function ProductEnhancedTable() {
     row: null,
   })
 
-  const {
-    filters,
-    pageNumber,
-    limitNumber,
-    name,
-    status,
-    type,
-    minPrice,
-    maxPrice,
-    variantDeleted,
-    setOrRemoveParam,
-    updateParams,
-  } = useProductFilters()
+  const { filters, pageNumber, limitNumber, name, status, type, minPrice, maxPrice, setOrRemoveParam, updateParams } =
+    useProductFilters()
 
   const navigate = useNavigate()
-
   // Params
 
   const { data } = useProductSearch(filters)
@@ -121,15 +108,6 @@ export default function ProductEnhancedTable() {
     return data.content.find((i) => i.id === modal.row)
   }, [data, modal.row])
 
-  const toggleMutation = useVariantToggle()
-  const handleToggleVariant = async (variantId) => {
-    try {
-      await toggleMutation.mutateAsync(variantId)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   if (!data) return <div>loading...</div>
 
   return (
@@ -164,11 +142,11 @@ export default function ProductEnhancedTable() {
               label="Status"
               onChange={handleChangeStatus}
             >
-              <MenuItem value="all">Tất cả</MenuItem>
-              <MenuItem value="active">Đang Bán</MenuItem>
-              <MenuItem value="inactive">Ngừng Bán</MenuItem>
-              <MenuItem value="out_of_stock">Hết Hàng</MenuItem>
-              <MenuItem value="discontinued">Ngừng Sản Xuất</MenuItem>
+              <MenuItem value="ALL">Tất cả</MenuItem>
+              <MenuItem value="ACTIVE">ACTIVE</MenuItem>
+              <MenuItem value="INACTIVE">Ngừng Bán</MenuItem>
+              <MenuItem value="OUT_OF_STOCK">Hết Hàng</MenuItem>
+              <MenuItem value="DISCONTINUED">Ngừng Sản Xuất</MenuItem>
             </Select>
           </FormControl>
           <FormControl
@@ -183,10 +161,10 @@ export default function ProductEnhancedTable() {
               label="Type"
               onChange={handleChangeType}
             >
-              <MenuItem value="all">Tất cả</MenuItem>
-              <MenuItem value="imported">Mua Ngoài</MenuItem>
-              <MenuItem value="self_made">Bánh Tự Làm</MenuItem>
-              <MenuItem value="raw_material">Nguyên Liệu</MenuItem>
+              <MenuItem value="ALL">Tất cả</MenuItem>
+              <MenuItem value="IMPORTED">Mua Ngoài</MenuItem>
+              <MenuItem value="SELF_MADE">Bánh Tự Làm</MenuItem>
+              <MenuItem value="RAW_MATERIAL">Nguyên Liệu</MenuItem>
             </Select>
           </FormControl>
         </Stack>
@@ -247,8 +225,6 @@ export default function ProductEnhancedTable() {
         modal={modal}
         onClose={handleClose}
         row={selectedRow}
-        onToggleVariant={handleToggleVariant}
-        variantDeleted={variantDeleted}
       />
     </Box>
   )

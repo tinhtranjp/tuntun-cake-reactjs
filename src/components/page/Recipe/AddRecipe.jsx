@@ -9,21 +9,22 @@ function AddRecipe() {
   const createMutation = useRecipeCreate()
 
   const handleSubmit = async (payload) => {
-    try {
-      const formData = new FormData()
+    return
+    // try {
+    //   const formData = new FormData()
 
-      formData.append("title", payload.title)
-      formData.append("content", payload.content)
-      formData.append("file", payload.file)
-      payload.categoryIds.forEach((id) => {
-        formData.append("categoryIds", id.toString())
-      })
+    //   formData.append("title", payload.title)
+    //   formData.append("content", payload.content)
+    //   formData.append("file", payload.file)
+    //   payload.categoryIds.forEach((id) => {
+    //     formData.append("categoryIds", id.toString())
+    //   })
 
-      await createMutation.mutateAsync(formData)
-      navigate("/recipe-list")
-    } catch (error) {
-      console.log(error)
-    }
+    //   await createMutation.mutateAsync(formData)
+    //   navigate("/recipe-list")
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
   return (
     <Box

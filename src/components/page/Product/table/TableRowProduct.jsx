@@ -5,11 +5,9 @@ import HtmlRender from "@/components/common/HtmlRender"
 import { useState } from "react"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import TableImage from "@/components/table/TableImage"
-import { renderBackGroundPrice } from "@/helper/variant"
+import { getValue } from "@/helper/product"
 export default function TableRowProduct({ row, isSelected, labelId, onClick, navigate, onOpenModal }) {
   const [open, setOpen] = useState(false)
-
-  console.log(row)
 
   return (
     <>
@@ -36,14 +34,21 @@ export default function TableRowProduct({ row, isSelected, labelId, onClick, nav
         >
           {row.id}
         </TableCell>
+        <TableCell
+          component="th"
+          id={labelId}
+          scope="row"
+          padding="none"
+        >
+          {row.name}
+        </TableCell>
         <TableCell sx={{ width: 150 }}>
           <TableImage
-            src={row.images[0].url}
+            src={row.images[0]?.url}
             width={50}
             height={50}
           />
         </TableCell>
-        <TableCell>{row.name}</TableCell>
         <TableCell
           onClick={(e) => {
             e.stopPropagation()
@@ -57,16 +62,24 @@ export default function TableRowProduct({ row, isSelected, labelId, onClick, nav
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        <TableCell>{row.quantity}</TableCell>
+        <TableCell
+          component="th"
+          id={labelId}
+          scope="row"
+        >
+          <Chip
+            label={getValue(row.status)}
+            color={row.status === "ACTIVE" ? "success" : row.status === "OUT_OF_STOCK" ? "error" : "default"}
+          />
+        </TableCell>
         <TableCell
           component="th"
           id={labelId}
           scope="row"
           padding="none"
         >
-          <Chip
-            label={`${row.basePrice.toLocaleString("vi-VN")} ₫`}
-            color={renderBackGroundPrice(row.basePrice)}
-          />
+          {getValue(row.productType)}
         </TableCell>
         <TableCell
           padding="none"
