@@ -1,10 +1,11 @@
 import { SortableList } from "@/components/dnd/SimpleReorder/SortableList"
 import { useCategoryGetAll } from "@/service/category/queries"
 import DeleteIcon from "@mui/icons-material/Delete"
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material"
+import { Box, Button, IconButton, Typography } from "@mui/material"
 import BorderColorIcon from "@mui/icons-material/BorderColor"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import LockOpenIcon from "@mui/icons-material/LockOpen"
 import { useCategoryReorder, useCategoryToggle } from "@/service/category/mutation"
 function ReorderCate() {
   const [items, setItems] = useState([])
@@ -74,7 +75,7 @@ function ReorderCate() {
                     onClick={() => handleDeleteCategory(item.id)}
                     sx={{ position: "absolute", top: "12px", right: 50 }}
                   >
-                    <DeleteIcon />
+                    {item.isDeleted ? <LockOpenIcon /> : <DeleteIcon />}
                   </IconButton>
                   <SortableList.DragHandle />
                 </SortableList.Item>
