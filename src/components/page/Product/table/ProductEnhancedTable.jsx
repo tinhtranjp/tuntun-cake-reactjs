@@ -18,7 +18,7 @@ import {
   TablePagination,
 } from "@mui/material"
 import * as React from "react"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { headCells } from "./headCells"
 import TableRowProduct from "./TableRowProduct"
 import { useProductFilters } from "./useProductFilters"

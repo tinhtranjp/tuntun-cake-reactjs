@@ -2,7 +2,7 @@ import { usePOGetOrderByIndex } from "@/service/product_option/queries"
 import OptionSortDnd from "./OptionsSortDnd"
 import { Box, Button, Stack, Typography } from "@mui/material"
 import { usePOReorder, usePOToggle } from "@/service/product_option/mutation"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 function Option() {

@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 
 function HeaderForm({ url, title, marginTop = 0, marginBottom = 4, isBack = false }) {
   const navigate = useNavigate()

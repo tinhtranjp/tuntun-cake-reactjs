@@ -1,7 +1,7 @@
 import { useCategoryUpdate } from "@/service/category/mutation"
 import UpdateFormCategory from "./components/UpdateFormCategory"
 import { Box } from "@mui/material"
-import { useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router-dom"
 import HeaderForm from "@/components/common/HederForm"
 function UpdateCategory() {
   const navigate = useNavigate()

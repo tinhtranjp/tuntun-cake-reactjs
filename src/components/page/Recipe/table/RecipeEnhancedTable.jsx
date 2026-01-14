@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useNavigate, useSearchParams } from "react-router"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import {
   Box,
   Paper,

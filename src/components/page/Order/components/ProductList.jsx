@@ -1,6 +1,6 @@
 import { useProductSearchOrders } from "@/service/product/queries"
 import { Box, Grid, Stack } from "@mui/material"
-import { useSearchParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 import ProductItem from "./ProductItem"
 import ProductModal from "./ProductModal"
 import { useState } from "react"

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { SimpleTreeView, TreeItem } from "@mui/x-tree-view"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router-dom"
 export default function SidebarTree() {
   const location = useLocation()
   const [expanded, setExpanded] = useState([])

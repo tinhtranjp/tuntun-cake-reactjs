@@ -6,7 +6,7 @@ import TabList from "@mui/lab/TabList"
 import TabPanel from "@mui/lab/TabPanel"
 import PurchaseImport from "./components/PurchaseImport"
 import { PurchaseReturn } from ".."
-import { useSearchParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 
 export default function PurchaseList() {
   const [value, setValue] = React.useState("1")

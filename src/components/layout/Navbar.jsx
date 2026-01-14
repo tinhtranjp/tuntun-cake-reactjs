@@ -5,7 +5,7 @@ import SpeedIcon from "@mui/icons-material/Speed"
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance"
 import AutoGraphIcon from "@mui/icons-material/AutoGraph"
 import { Box, Divider, Stack } from "@mui/material"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router-dom"
 
 function Navbar() {
   const [menuState, setMenuState] = useState({})

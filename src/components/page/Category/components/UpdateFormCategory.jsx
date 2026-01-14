@@ -5,7 +5,7 @@ import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router"
+import { useParams } from "react-router-dom"
 import z from "zod"
 
 const schema = z.object({

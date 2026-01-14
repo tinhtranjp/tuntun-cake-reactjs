@@ -2,7 +2,7 @@ import HeaderForm from "@/components/common/HederForm"
 import { Box } from "@mui/material"
 import FormProduct from "./components/FormProduct"
 import { useProductCreate } from "@/service/product/mutation"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 
 function AddProduct() {
   const navigate = useNavigate()

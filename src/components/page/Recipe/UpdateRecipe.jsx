@@ -1,7 +1,7 @@
 import HeaderForm from "@/components/common/HederForm"
 import { useRepiceUpdate } from "@/service/recipe/mutation"
 import Box from "@mui/material/Box"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import UpdateFormRecipe from "./components/UpdateFormRecipe"
 
 function UpdateRecipe() {

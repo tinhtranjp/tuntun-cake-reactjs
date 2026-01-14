@@ -1,7 +1,7 @@
 import { useDashBoard } from "@/service/product/queries"
 import { Box } from "@mui/material"
 import DashboardPage from "./DashboardPage"
-import { useSearchParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 import dayjs from "dayjs"
 import { useMemo } from "react"
 

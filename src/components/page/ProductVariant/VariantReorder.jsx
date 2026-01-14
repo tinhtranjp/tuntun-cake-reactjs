@@ -1,6 +1,6 @@
 import HeaderForm from "@/components/common/HederForm"
 import { useProductGetDetail } from "@/service/product/queries"
-import { useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router-dom"
 import VariantSortDnd from "./VariantSortDnd"
 import { pvApi } from "@/service/product-variant/pvApi"
 import { toast } from "sonner"

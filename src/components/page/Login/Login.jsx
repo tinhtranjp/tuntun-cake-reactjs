@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import LoginForm from "./LoginForm"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { useUserLogin } from "@/service/user/mutation"
 import { setUser } from "@/store/UserStore"
 

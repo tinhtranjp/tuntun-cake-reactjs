@@ -1,7 +1,7 @@
 import { useCategoryGetAll } from "@/service/category/queries"
 import { Box, Button, Stack } from "@mui/material"
 import { useEffect } from "react"
-import { useSearchParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 
 function NavOrder({ ...props }) {
   const [searchParams, setSearchParams] = useSearchParams()

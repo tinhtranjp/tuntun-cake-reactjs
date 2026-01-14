@@ -2,7 +2,7 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import RegisterForm from "./RegisterForm"
 import { useCreateUser } from "@/service/user/mutation"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 
 function Register() {
   const navigate = useNavigate()

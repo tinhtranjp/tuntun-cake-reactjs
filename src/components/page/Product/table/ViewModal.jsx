@@ -3,7 +3,7 @@ import { styleModal } from "@/components/table/styles"
 import TableImage from "@/components/table/TableImage"
 import { getDefaultImg } from "@/helper/common"
 import { getValue } from "@/helper/product"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import Grid from "@mui/material/Grid"
 function ViewModal({ modal, onClose, row }) {
   const navigate = useNavigate()

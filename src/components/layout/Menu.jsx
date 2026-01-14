@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import React from "react"
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Box, Stack } from "@mui/material"
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 

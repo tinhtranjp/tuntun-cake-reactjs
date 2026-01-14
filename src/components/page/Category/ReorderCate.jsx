@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material"
 import BorderColorIcon from "@mui/icons-material/BorderColor"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { useCategoryReorder, useCategoryToggle } from "@/service/category/mutation"
 function ReorderCate() {
   const [items, setItems] = useState([])

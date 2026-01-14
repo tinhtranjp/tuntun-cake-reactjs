@@ -1,4 +1,4 @@
-import { useParams } from "react-router"
+import { useParams } from "react-router-dom"
 import FormVariant from "./components/FormVariant"
 import { useProductGetDetail } from "@/service/product/queries"
 import { usePVCreate } from "@/service/product-variant/mutation"

@@ -10,7 +10,7 @@ import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { useParams } from "react-router"
+import { useParams } from "react-router-dom"
 import { schemaUpdate } from "./schema"
 
 function UpdateFormRecipe({ onSubmit }) {

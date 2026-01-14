@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
 import UpdateFormProduct from "./components/UpdateFormProduct"
 import HeaderForm from "@/components/common/HederForm"
-import { useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router-dom"
 import { useProductUpdate } from "@/service/product/mutation"
 function UpdateProduct() {
   const { id } = useParams()

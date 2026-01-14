@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Box, Button, FormHelperText, Grid } from "@mui/material"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { useParams } from "react-router"
+import { useParams } from "react-router-dom"
 import { schemaUpdate } from "./schema"
 
 function UpdateFormProduct({ onSubmit }) {
