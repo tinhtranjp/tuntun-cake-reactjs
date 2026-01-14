@@ -2,7 +2,6 @@ import NotFound from "@/components/layout/NotFound"
 import UpdateCategory from "@/components/page/Category/UpdateCategory"
 import {
   AddCategory,
-  Home,
   LayoutRoute,
   Login,
   Register,
@@ -38,7 +37,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
 import Navbar from "./components/layout/Navbar"
 import { Pushchased } from "./components/page"
-import { useUserStore } from "./store/UserStore"
 
 const theme = createTheme({
   typography: {
@@ -47,16 +45,6 @@ const theme = createTheme({
 })
 const queryClient = new QueryClient()
 function App() {
-  const user = useUserStore()
-
-  // Nếu chưa login thì redirect về login
-  if (!user)
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    )
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
